@@ -1,8 +1,5 @@
 cmake_minimum_required(VERSION 3.13)
 
-# Add this line to explicitly set SDK path
-set(PICO_SDK_PATH "/home/akos/.pico-sdk")
-
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 include(pico_sdk_import.cmake)
