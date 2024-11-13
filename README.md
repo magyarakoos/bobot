@@ -1,4 +1,4 @@
-# Bobot driver written in C++
+# Bobot firmware written in C++
 
 ## Setup (WIP)
 - Download [pico-sdk](https://github.com/raspberrypi/pico-sdk)
