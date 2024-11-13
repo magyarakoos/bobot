@@ -7,7 +7,7 @@ set(PROJECT_NAME "bobot")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # import the SDK directly
-include(${PICO_SDK_PATH}/pico_sdk_import.cmake)
+include(${PICO_SDK_PATH}/pico_sdk_init.cmake)
 
 # initialize the Raspberry Pi Pico SDK
 project(${PROJECT_NAME} C CXX ASM)
