@@ -21,6 +21,9 @@ pico_sdk_init()
 
 add_executable(${PROJECT_NAME}
     main.cpp
+    src/pin.cpp
+    src/pwm.cpp
+    src/onboard_led.cpp
 )
 
 # needed for serial USB communication
@@ -29,5 +32,12 @@ pico_enable_stdio_usb(${PROJECT_NAME} 1)
 # create map/bin/hex/uf2 file in addition to ELF.
 pico_add_extra_outputs(${PROJECT_NAME})
 
-# add used pico libraries
-target_link_libraries(${PROJECT_NAME} pico_stdlib pico_cyw43_arch_none)
+# include directories for headers
+target_include_directories(${PROJECT_NAME} PRIVATE include)
+
+# pull in pico libraries that we need
+target_link_libraries(${PROJECT_NAME} 
+    pico_stdlib
+    pico_cyw43_arch_none
+    hardware_pwm
+    hardware_clocks)
