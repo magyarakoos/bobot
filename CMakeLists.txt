@@ -24,6 +24,7 @@ add_executable(${PROJECT_NAME}
     src/pin.cpp
     src/pwm.cpp
     src/onboard_led.cpp
+    src/h_bridge.cpp
 )
 
 # needed for serial USB communication
