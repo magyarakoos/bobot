@@ -54,34 +54,3 @@ void PWM::duty(float _duty_cycle) {
 
     calculate_values();
 }
-
-void setup_pwm(uint pin, uint frequency, float duty_cycle) {
-
-    gpio_set_function(pin, GPIO_FUNC_PWM);
-
-    // get the corresponding pwm slice
-    uint slice_num = pwm_gpio_to_slice_num(pin);
-
-    // if we want a lower frequency, we'd need to increase
-    // the clock divider which introduces a ton of
-    // complexity I might add it in the future though
-    frequency = std::clamp(frequency, 1907u, CLOCK_SPEED);
-
-    // duty_cycle should be in the range [0, 1]
-    duty_cycle = std::clamp(duty_cycle, 0.0f, 1.0f);
-
-    // calculate wrap and level
-    uint wrap = (CLOCK_SPEED / (float)frequency) - 1;
-    uint level = duty_cycle * (wrap + 1);
-
-    // configure the PWM slice for the desired frequency
-    // (wrap value)
-    pwm_set_wrap(slice_num, wrap);
-
-    // set the duty cycle (level value)
-    pwm_set_chan_level(slice_num, pwm_gpio_to_channel(pin),
-                       level);
-
-    // enable the PWM slice
-    pwm_set_enabled(slice_num, true);
-}

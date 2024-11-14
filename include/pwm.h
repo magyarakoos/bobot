@@ -36,5 +36,3 @@ public:
     // of time the PWM signal is high within a single cycle
     void duty(float _duty_cycle);
 };
-
-void setup_pwm(uint pin, uint frequency, float duty_cycle);
