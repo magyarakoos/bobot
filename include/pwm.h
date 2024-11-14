@@ -23,6 +23,8 @@ class PWM {
     void calculate_values();
 
 public:
+    static const uint CLOCK_SPEED = 125e6; // CPU clock speed, 125 MHz
+
     PWM(uint _pin);
 
     void enable();

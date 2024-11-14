@@ -2,8 +2,6 @@
 #include <algorithm>
 #include <iostream>
 
-const uint CLOCK_SPEED = 125000000;
-
 void PWM::calculate_values() {
 
     // calculate wrap and level
