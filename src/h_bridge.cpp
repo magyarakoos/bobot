@@ -2,6 +2,7 @@
 #include "pico/stdlib.h"
 
 #include <algorithm>
+#include <cmath>
 
 HBridge::HBridge(uint _l1, uint _l2, uint _r1, uint _r2,
                  uint _eep, uint _ult, uint pwm_freq)
@@ -42,9 +43,9 @@ void HBridge::drive(float l, float r) {
     l = std::clamp(l, -1.0f, 1.0f);
     r = std::clamp(r, -1.0f, 1.0f);
 
-    l1.duty(abs(l) * (l > 0));
-    l2.duty(abs(l) * (l < 0));
+    l1.duty(fabsf(l) * (l > 0));
+    l2.duty(fabsf(l) * (l < 0));
 
-    r1.duty(abs(r) * (r < 0));
-    r2.duty(abs(r) * (r > 0));
+    r1.duty(fabsf(r) * (r < 0));
+    r2.duty(fabsf(r) * (r > 0));
 }
