@@ -12,6 +12,7 @@ class Pin {
 public:
     uint pin;
 
+    Pin(uint _pin, bool _out, bool _pull_up);
     Pin(uint _pin, bool _out);
     Pin(uint _pin);
 
