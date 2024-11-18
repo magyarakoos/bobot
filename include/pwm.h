@@ -27,6 +27,8 @@ public:
 
     PWM(uint _pin);
 
+    ~PWM();
+
     void enable();
     void disable();
 

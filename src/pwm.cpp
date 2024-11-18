@@ -23,6 +23,10 @@ PWM::PWM(uint _pin)
     enable();
 }
 
+PWM::~PWM() {
+    disable();
+}
+
 void PWM::enable() {
     gpio_set_function(pin, GPIO_FUNC_PWM);
     pwm_set_enabled(slice_num, true);
