@@ -6,15 +6,3 @@ UltraSensor::UltraSensor(uint _trig, uint _echo,
     {
         
 }
-
-std::optional<float> UltraSensor::measure_sync() {
-    trig.value(1);
-    sleep_us(15);
-    trig.value(0);
-
-    
-}
-
-std::optional<float> UltraSensor::measure_precise_sync() {
-    return std::nullopt;
-}
