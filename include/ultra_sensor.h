@@ -10,11 +10,11 @@ class UltraSensor {
     uint buffer_size;
 
     // conversion constant for the speed of sound
-    static const float METERS_PER_US = 0.0001715f;
+    static constexpr float METERS_PER_US = 0.0001715f;
     // minimum range of the sensor
-    static const float MIN_DIST = 0.02f;
+    static constexpr float MIN_DIST = 0.02f;
     // maximum range of the sensor
-    static const float MAX_DIST = 4.0f;
+    static constexpr float MAX_DIST = 4.0f;
 public:
     UltraSensor(uint _trig, uint _echo, uint _buffer_size = 5);
 
