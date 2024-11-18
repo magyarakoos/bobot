@@ -1,44 +1,14 @@
-#include "hardware/pwm.h"
-#include "pico/cyw43_arch.h"
-#include "pico/stdlib.h"
-
-#include <algorithm>
-#include <iostream>
-
-#include "onboard_led.h"
-#include "pin.h"
-#include "pwm.h"
-#include "h_bridge.h"
-
-const uint LED_DELAY_MS = 100;
-const uint BUZZER_PIN = 4;
+#include "bobot.h"
 
 int main() {
-    stdio_init_all();
+    Bobot::init();
 
-    OnboardLed led;
+    Bobot::buzzer.freq(2000);
+    Bobot::buzzer.duty(0.9);
 
-    PWM pwm = {BUZZER_PIN};
-
-    // pwm.freq(2000);
-    // pwm.duty(0.9);
-
-    HBridge hb = {
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
-        2000
-    };
-
-    hb.drive(1, 1);
+    Bobot::hb.drive(0.5, 0.5);
 
     while (true) {
-        led.toggle();
-        sleep_ms(LED_DELAY_MS);
-        led.toggle();
-        sleep_ms(LED_DELAY_MS);
+        sleep_ms(1000);
     }
 }

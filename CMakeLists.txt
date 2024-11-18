@@ -26,6 +26,7 @@ add_executable(${PROJECT_NAME}
     src/onboard_led.cpp
     src/h_bridge.cpp
     src/ultra_sensor.cpp
+    src/bobot.cpp
 )
 
 # needed for serial USB communication
