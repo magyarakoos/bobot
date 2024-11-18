@@ -16,6 +16,10 @@ void Pin::disable() {
     gpio_deinit(pin);
 }
 
+Pin::~Pin() {
+    disable();
+}
+
 bool Pin::value(bool __value) {
     _value = __value;
     if (out) {

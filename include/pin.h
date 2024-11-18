@@ -7,12 +7,15 @@
 // 
 // by default, the Pin is enabled
 class Pin {
-    uint pin;
     bool out;
     bool _value;
 public:
+    uint pin;
+
     Pin(uint _pin, bool _out);
     Pin(uint _pin);
+
+    ~Pin();
 
     void enable();
     void disable();
