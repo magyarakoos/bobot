@@ -5,6 +5,7 @@ namespace Bobot {
     Pin button = {BUTTON_PIN, GPIO_IN, true};
     PWM buzzer = {BUZZER_PIN};
     HBridge hb = {10, 11, 12, 13, 14, 15, 2000};
+    UltraSensor ultra = {25, 25};
 
     void init() {
         stdio_init_all();
@@ -15,6 +16,15 @@ namespace Bobot {
             true, 
             &gpio_irq
         );
+
+        gpio_set_irq_enabled_with_callback(
+            ultra.trig.pin,
+            GPIO_IRQ_EDGE_RISE,
+            true,
+            &gpio_irq
+        );
+
+        ultra.send_trigger();
     }
 
     void enable() {
@@ -23,6 +33,7 @@ namespace Bobot {
 
         buzzer.enable();
         hb.enable();
+        ultra.enable();
     }
 
     void disable() {
@@ -31,6 +42,7 @@ namespace Bobot {
 
         buzzer.disable();
         hb.disable();
+        ultra.disable();
     }
 
     void toggle() {
@@ -48,6 +60,12 @@ namespace Bobot {
 
             last_pause_us = now;
             toggle();
+        }
+
+        // ultra sensor
+        if (gpio == ultra.echo.pin && event_mask & GPIO_IRQ_EDGE_RISE) {
+            ultra.last_time_elapsed_us = time_us_64() - ultra.last_trigger_us;
+            ultra.send_trigger();
         }
     }
 }

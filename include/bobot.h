@@ -3,6 +3,7 @@
 #include "pin.h"
 #include "pwm.h"
 #include "h_bridge.h"
+#include "ultra_sensor.h"
 
 // wrapper for the peripheral drivers for Bobot
 // it's particularly useful for the IRQ function
@@ -22,6 +23,7 @@ namespace Bobot {
     extern Pin button;
     extern PWM buzzer;
     extern HBridge hb;
+    extern UltraSensor ultra;
 
     // initialize Bobot functinonality
     void init();

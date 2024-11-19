@@ -4,10 +4,9 @@
 #include "pin.h"
 #include <optional>
 
+// Ultrasound sensor controller
 class UltraSensor {
-    Pin trig;
-    Pin echo;
-    uint buffer_size;
+    bool enabled = true;
 
     // conversion constant for the speed of sound
     static constexpr float METERS_PER_US = 0.0001715f;
@@ -15,18 +14,26 @@ class UltraSensor {
     static constexpr float MIN_DIST = 0.02f;
     // maximum range of the sensor
     static constexpr float MAX_DIST = 4.0f;
+
 public:
-    UltraSensor(uint _trig, uint _echo, uint _buffer_size = 5);
+    Pin trig; 
+    Pin echo;
+
+    uint64_t last_trigger_us = 0;
+    uint64_t last_time_elapsed_us = 0;
+
+    UltraSensor(uint _trig, uint _echo);
 
     void enable();
     void disable();
 
-    // returns the distance measured by the sensor, or
-    // std::nullopt if it was outside it's rated range
-    std::optional<float> measure_sync();
+    // sends a value to the trigger pin, this starts
+    // the callback loop, this must be called after
+    // the irq callback got registered
+    void send_trigger();
 
-    // it has the same functionality as measure_sync,
-    // but it uses a buffer to store previous measurements
-    // for more accurate results
-    std::optional<float> measure_precise_sync();
+    // returns the distance measured by the sensor (in meters)
+    // or std::nullopt if it was outside it's rated range
+    // or the sensor is currently disabled
+    std::optional<float> measure();
 };
