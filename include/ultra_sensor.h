@@ -19,21 +19,12 @@ public:
     Pin trig; 
     Pin echo;
 
-    uint64_t last_trigger_us = 0;
-    uint64_t last_time_elapsed_us = 0;
+    volatile float distance;
 
     UltraSensor(uint _trig, uint _echo);
 
     void enable();
     void disable();
 
-    // sends a value to the trigger pin, this starts
-    // the callback loop, this must be called after
-    // the irq callback got registered
-    void send_trigger();
-
-    // returns the distance measured by the sensor (in meters)
-    // or std::nullopt if it was outside it's rated range
-    // or the sensor is currently disabled
-    std::optional<float> measure();
+    float calculate_distance(uint64_t elapsed);
 };

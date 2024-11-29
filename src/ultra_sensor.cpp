@@ -1,10 +1,8 @@
 #include "ultra_sensor.h"
 
 UltraSensor::UltraSensor(uint _trig, uint _echo) 
-    : trig(_trig), echo(_echo, GPIO_IN) 
-    {
-         
-}
+    : trig(_trig), echo(_echo, GPIO_IN), distance(-1)
+    {}
 
 void UltraSensor::enable() {
     if (enabled) return;
@@ -22,19 +20,11 @@ void UltraSensor::disable() {
     echo.disable();
 }
 
-void UltraSensor::send_trigger() {
-    trig.value(1);
-    sleep_us(15);
-    trig.value(0);
-
-    last_trigger_us = time_us_64();
-}
-
-std::optional<float> UltraSensor::measure() {
-    float distance = last_time_elapsed_us * METERS_PER_US;
+float UltraSensor::calculate_distance(uint64_t elapsed) {
+    float distance = elapsed * METERS_PER_US;
 
     if (distance < MIN_DIST || distance > MAX_DIST || !enabled) {
-        return std::nullopt;
+        return -1;
     }
 
     return distance;

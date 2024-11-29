@@ -4,6 +4,7 @@
 #include "pwm.h"
 #include "h_bridge.h"
 #include "ultra_sensor.h"
+#include "onboard_led.h"
 
 // wrapper for the peripheral drivers for Bobot
 // it's particularly useful for the IRQ function
@@ -13,7 +14,7 @@ namespace Bobot {
     // TODO: replace these with a config file
     static const uint BUZZER_PIN = 4;
     static const uint BUTTON_PIN = 0;
-    static const uint DEBOUNCE_INTERVAL_US = 2e5;
+    static const uint DEBOUNCE_INTERVAL_US = 5e5;
 
     // private bobot state variables
     static bool bobot_enabled = true;
@@ -24,6 +25,7 @@ namespace Bobot {
     extern PWM buzzer;
     extern HBridge hb;
     extern UltraSensor ultra;
+    extern OnboardLed led;
 
     // initialize Bobot functinonality
     void init();
