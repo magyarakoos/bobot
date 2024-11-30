@@ -20,7 +20,7 @@ set(PICO_BOARD pico_w CACHE STRING "Board type")
 pico_sdk_init()
 
 add_executable(${PROJECT_NAME}
-    main.cpp
+    src/main.cpp
     src/pin.cpp
     src/pwm.cpp
     src/onboard_led.cpp

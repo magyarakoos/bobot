@@ -1,7 +1,7 @@
 #include "ultra_sensor.h"
 
 UltraSensor::UltraSensor(uint _trig, uint _echo) 
-    : trig(_trig), echo(_echo, GPIO_IN), distance(-1)
+    : trig(_trig), echo(_echo, GPIO_IN)
     {}
 
 void UltraSensor::enable() {
@@ -20,8 +20,8 @@ void UltraSensor::disable() {
     echo.disable();
 }
 
-float UltraSensor::calculate_distance(uint64_t elapsed) {
-    float distance = elapsed * METERS_PER_US;
+float UltraSensor::distance() {
+    float distance = (fall - rise) * METERS_PER_US;
 
     if (distance < MIN_DIST || distance > MAX_DIST || !enabled) {
         return -1;

@@ -19,12 +19,14 @@ public:
     Pin trig; 
     Pin echo;
 
-    volatile float distance;
+    volatile uint64_t rise;
+    volatile uint64_t fall;
+    volatile uint64_t last_pulse;
 
     UltraSensor(uint _trig, uint _echo);
 
     void enable();
     void disable();
 
-    float calculate_distance(uint64_t elapsed);
+    float distance();
 };

@@ -3,103 +3,91 @@
 
 namespace Bobot {
 
-    // Pin button = {BUTTON_PIN, GPIO_IN, true};
-    // PWM buzzer = {BUZZER_PIN};
-    HBridge hb = {10, 11, 12, 13, 14, 15, 2000};
-    UltraSensor ultra = {20, 19};
-    OnboardLed led;    
+PWM buzzer = {BUZZER_PIN};
+HBridge hb = {10, 11, 12, 13, 14, 15, 2000};
+OnboardLed led;
+Pin button = {BUTTON_PIN, GPIO_IN, true};
+UltraSensor ultra = {ULTRA_TRIG_PIN, ULTRA_ECHO_PIN};
 
-    struct repeating_timer trig_up_timer;
-    struct repeating_timer trig_down_timer;
+struct repeating_timer ultra_trig_up_timer;
+struct repeating_timer ultra_trig_down_timer;
 
-    uint64_t last_pulse;
-    bool trig_up(__unused struct repeating_timer *t) {
-        led.on();
-        if (last_pulse > 0)
-            ultra.distance = -1;
+bool ultra_trig_up(__unused repeating_timer* t) {
+    ultra.trig.value(1);
+    ultra.last_pulse = time_us_64();
+    return true;
+}
 
-        ultra.trig.value(1);
-        last_pulse = time_us_64();
+bool ultra_trig_down(__unused repeating_timer* t) {
+    ultra.trig.value(0);
+    return true;
+}
 
-        return true;
-    }
-    bool trig_down(__unused struct repeating_timer *t) {
-        ultra.trig.value(0);
-        return true;
-    }
+void init() {
+    gpio_set_irq_enabled_with_callback(
+        ultra.echo.pin,
+        GPIO_IRQ_EDGE_RISE | GPIO_IRQ_EDGE_FALL, true,
+        &gpio_irq
+    );
 
+    add_repeating_timer_ms(-60, &ultra_trig_up, NULL, &ultra_trig_up_timer);
+    sleep_us(15);
+    add_repeating_timer_ms(-60, &ultra_trig_down, NULL, &ultra_trig_down_timer);
 
-    void init() {
+    gpio_set_irq_enabled_with_callback(
+        button.pin,
+        GPIO_IRQ_EDGE_FALL,
+        true,
+        &gpio_irq
+    );
+}
 
-        // gpio_set_irq_enabled_with_callback(
-        //     button.pin, 
-        //     GPIO_IRQ_EDGE_FALL, 
-        //     true, 
-        //     &gpio_irq
-        // );
+void enable() {
+    if (bobot_enabled) return;
+    bobot_enabled = true;
 
-        bool added_timer = add_repeating_timer_ms(-60, trig_up, NULL, &trig_up_timer);
-        printf("added_timer: %s\n", added_timer ? "true" : "false");
-        // sleep_us(15);
-        // add_repeating_timer_ms(-60, trig_down, NULL, &trig_down_timer);
+    buzzer.enable();
+    hb.enable();
+    ultra.enable();
+}
 
-        // gpio_set_irq_enabled_with_callback(
-        //     ultra.echo.pin,
-        //     GPIO_IRQ_EDGE_RISE,
-        //     true,
-        //     &gpio_irq
-        // );
+void disable() {
+    if (!bobot_enabled) return;
+    bobot_enabled = false;
 
-        // gpio_set_irq_enabled_with_callback(
-        //     ultra.echo.pin,
-        //     GPIO_IRQ_EDGE_FALL,
-        //     true,
-        //     &gpio_irq
-        // );
-    }
+    buzzer.disable();
+    hb.disable();
+    ultra.disable();
+}
 
-    void enable() {
-        if (bobot_enabled) return;
-        bobot_enabled = true;
+void toggle() {
+    bobot_enabled ? disable() : enable();
+}
 
-        buzzer.enable();
-        hb.enable();
-        ultra.enable();
-    }
-
-    void disable() {
-        if (!bobot_enabled) return;
-        bobot_enabled = false;
-
-        buzzer.disable();
-        hb.disable();
-        ultra.disable();
-    }
-
-    void toggle() {
-        bobot_enabled ? disable() : enable();
+void gpio_irq(uint gpio, uint32_t event_mask) {
+    // ultra sensor logic
+    if (gpio == ultra.echo.pin) {
+        if (event_mask & GPIO_IRQ_EDGE_RISE) {
+            ultra.rise = time_us_64();
+        } else if (event_mask & GPIO_IRQ_EDGE_FALL) {
+            ultra.fall = time_us_64();
+        }
+        return;
     }
 
-    void gpio_irq(uint gpio, uint32_t event_mask) {
-        // pause button logic
-        if (gpio == button.pin && event_mask & GPIO_IRQ_EDGE_FALL) {
-            uint64_t now = time_us_64();
+    // pause button logic
+    if (gpio == button.pin &&
+        event_mask & GPIO_IRQ_EDGE_FALL) {
+        uint64_t now = time_us_64();
 
-            if (now - last_pause_us < DEBOUNCE_INTERVAL_US) {
-                return;
-            }
-
-            last_pause_us = now;
-            toggle();
-
+        if (now - last_pause_us < DEBOUNCE_INTERVAL_US) {
             return;
         }
 
-        // ultra sensor
-        if (gpio == ultra.echo.pin) {
-            uint64_t elapsed = time_us_64();
-            ultra.distance = ultra.calculate_distance(elapsed);
-            return;
-        }
+        last_pause_us = now;
+        toggle();
+
+        return;
     }
 }
+} // namespace Bobot
