@@ -20,8 +20,7 @@ class HBridge {
     float r_speed;
 
 public:
-    HBridge(uint _l1, uint _l2, uint _r1, uint _r2,
-            uint _eep, uint _ult, uint pwm_freq);
+    HBridge(uint _l1, uint _l2, uint _r1, uint _r2, uint _eep, uint _ult, uint pwm_freq);
 
     void enable();
     void disable();

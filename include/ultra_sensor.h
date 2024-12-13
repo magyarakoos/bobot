@@ -1,8 +1,8 @@
 #pragma once
 
+#include <optional>
 #include "pico/stdlib.h"
 #include "pin.h"
-#include <optional>
 
 // Ultrasound sensor controller
 class UltraSensor {
@@ -16,7 +16,7 @@ class UltraSensor {
     static constexpr float MAX_DIST = 4.0f;
 
 public:
-    Pin trig; 
+    Pin trig;
     Pin echo;
 
     volatile uint64_t rise;

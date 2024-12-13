@@ -4,11 +4,12 @@
 
 // provides a basic abstraction for GPIO
 // if unspecified, GPIO direction is OUT
-// 
+//
 // by default, the Pin is enabled
 class Pin {
     bool out;
     bool _value;
+
 public:
     uint pin;
 

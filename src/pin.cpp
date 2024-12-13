@@ -1,12 +1,11 @@
 #include "pin.h"
 #include "pico/stdlib.h"
 
-Pin::Pin(uint _pin, bool _out, bool _pull_up)
-    : pin(_pin), out(_out), _value(0) {
+Pin::Pin(uint _pin, bool _out, bool _pull_up) : pin(_pin), out(_out), _value(0) {
     enable();
-    if (_pull_up) {
+
+    if (_pull_up)
         gpio_pull_up(pin);
-    }
 }
 
 Pin::Pin(uint _pin, bool _out) : Pin(_pin, _out, false) {}
@@ -36,4 +35,6 @@ bool Pin::value(bool __value) {
     }
 }
 
-void Pin::toggle() { value(!_value); }
+void Pin::toggle() {
+    value(!_value);
+}

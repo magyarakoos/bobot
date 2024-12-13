@@ -2,13 +2,9 @@
 #include "pico/stdlib.h"
 
 #include <algorithm>
-#include <cmath>
 
-HBridge::HBridge(uint _l1, uint _l2, uint _r1, uint _r2,
-                 uint _eep, uint _ult, uint pwm_freq)
-    : l1(_l1), l2(_l2), r1(_r1), r2(_r2), eep(_eep),
-      ult(_ult, GPIO_IN) 
-    {
+HBridge::HBridge(uint _l1, uint _l2, uint _r1, uint _r2, uint _eep, uint _ult, uint pwm_freq)
+    : l1(_l1), l2(_l2), r1(_r1), r2(_r2), eep(_eep), ult(_ult, GPIO_IN) {
     enable();
 
     l1.freq(pwm_freq);
