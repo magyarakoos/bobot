@@ -8,14 +8,19 @@ HBridge hb = { 10, 11, 12, 13, 14, 15, 2000 };
 OnboardLed led;
 Pin button = { BUTTON_PIN, GPIO_IN, true };
 UltraSensor ultra = { ULTRA_TRIG_PIN, ULTRA_ECHO_PIN };
-ProximitySensor proxy = {};
+// ProximitySensor proxy = {};
 RgbSensor rgb_sensor = {};
-Servo servo = {};
+// Servo servo = {};
 
 struct repeating_timer ultra_trig_up_timer;
 struct repeating_timer ultra_trig_down_timer;
 
-void proxy_handler() {}
+// void proxy_handler() {}
+bool ultra_trig_up(__unused repeating_timer* t) {
+    ultra.trig.value(1);
+    ultra.last_pulse = time_us_64();
+    return true;
+}
 
 bool ultra_trig_down(__unused repeating_timer* t) {
     ultra.trig.value(0);
@@ -90,8 +95,8 @@ void gpio_irq(uint gpio, uint32_t event_mask) {
 
     }
 
-    // ultra sensor logic
-    else if (gpio == proxy.pin)
-        proxy.handler();
-
+    // // ultra sensor logic
+    // else if (gpio == proxy.pin)
+    //     proxy.handler();
+}
 } // namespace Bobot
