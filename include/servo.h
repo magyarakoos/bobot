@@ -16,6 +16,4 @@ public:
 
     void deg(float d);
     void rad(float r);
-
-    ~Servo();
 };

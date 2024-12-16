@@ -6,8 +6,10 @@ int main() {
     stdio_init_all();
     Bobot::init();
 
-    Bobot::hb.drive(0.5, 0.5);
+    // TODO: implement low frequency PWM for real this time
+    PWM servo(16);
+    servo.freq(50);
+    servo.duty(0.1f);
 
-    while (true)
-        sleep_ms(1000);
+    while (1);
 }

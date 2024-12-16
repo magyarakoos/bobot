@@ -1,14 +1,17 @@
 #include "servo.h"
+#include <algorithm>
 #include <cmath>
 
 Servo::Servo(uint pin, uint16_t min, uint16_t mid, uint16_t max) : pwm(PWM(pin)) {
     this->min = min;
     this->mid = mid;
     this->max = max;
+
+    pwm.freq(2000);
 }
 
 void Servo::duty(float d) {
-    d = 1 - std::clamp(d, 0, 1);
+    d = 1 - std::clamp(d, 0.0f, 1.0f);
 
     float duty;
     if (d <= 0.5)
@@ -25,8 +28,6 @@ void Servo::deg(float d) {
 }
 
 void Servo::rad(float r) {
-    r = (r + 0.5 * pi) / pi;
+    r = (r + 0.5 * M_PI) / M_PI;
     duty(r);
 }
-
-Servo::~Servo() {}
