@@ -1,22 +1,21 @@
 #pragma once
 
-#include "hardware/pwm.h"
 #include "pico/stdlib.h"
+#include "hardware/pwm.h"
 
 #include "pin.h"
 
 // abstraction for the hardware PWM's
-// it's useful because we can configure it with frequency
+// it's useful because we can configure it with frequency 
 // and duty cycle, instead of wrap and level
 //
 // by default, the PWM is enabled
 class PWM {
     uint pin;
-
-    uint16_t level;
     uint frequency;
-
-    uint slice_num, channel_num;
+    float duty_cycle;
+    uint slice_num;
+    uint channel_num;
 
     // based on the current frequency and duty cycle,
     // it calculates their corresponding wrap and level values
@@ -35,13 +34,14 @@ public:
 
     // sets the number of PWM cycles per second
     // currently, the valid range is only >=1907
-    void freq(uint frequency);
+    void freq(uint _frequency);
 
-    // Value between 0 and 1, representing the percentage
+    // Value between 0 and 1, representing the percentage 
     // of time the PWM signal is high within a single cycle
-    void duty(float duty_cycle);
+    void duty(float _duty_cycle);
 
-    // Value between 0 and 0xffff, representing the percentage
+    // Integer value between 0 and 0xffff, representing the percentage 
     // of time the PWM signal is high within a single cycle
     void duty(uint16_t level);
 };
+  

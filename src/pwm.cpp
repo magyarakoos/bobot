@@ -1,10 +1,12 @@
 #include "pwm.h"
 #include <algorithm>
+#include <iostream>
 
 void PWM::calculate_values() {
 
     // calculate wrap and level
-    uint wrap = (CLOCK_SPEED / (float) frequency) - 1;
+    uint wrap = (CLOCK_SPEED / (float)frequency) - 1;
+    uint level = duty_cycle * (wrap + 1);
 
     // configure the PWM slice for the desired frequency
     // (wrap value)
@@ -15,9 +17,7 @@ void PWM::calculate_values() {
 }
 
 PWM::PWM(uint _pin)
-    : pin(_pin),
-      frequency(0),
-      level(0),
+    : pin(_pin), frequency(0), duty_cycle(0),
       slice_num(pwm_gpio_to_slice_num(_pin)),
       channel_num(pwm_gpio_to_channel(_pin)) {
     enable();
@@ -48,13 +48,16 @@ void PWM::freq(uint _frequency) {
     calculate_values();
 }
 
-void PWM::duty(float duty_cycle) {
-    uint wrap = (CLOCK_SPEED / (float) frequency) - 1;
-    uint level = duty_cycle * (wrap + 1);
+void PWM::duty(float _duty_cycle) {
+    duty_cycle = _duty_cycle;
+
+    // duty cycle should be between 0 and 1
+    duty_cycle = std::clamp(duty_cycle, 0.0f, 1.0f);
+
     calculate_values();
 }
 
+// TODO: this is not nice, rewrite the calculations with integers
 void PWM::duty(uint16_t level) {
-    this->level = level;
-    calculate_values();
+    duty((float)level / 0xffff);
 }
