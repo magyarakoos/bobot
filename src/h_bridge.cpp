@@ -1,6 +1,7 @@
 #include "h_bridge.h"
 #include "pico/stdlib.h"
 
+#include <cmath>
 #include <algorithm>
 
 HBridge::HBridge(uint _l1, uint _l2, uint _r1, uint _r2, uint _eep, uint _ult, uint pwm_freq)
