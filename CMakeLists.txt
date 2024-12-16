@@ -27,6 +27,9 @@ add_executable(${PROJECT_NAME}
     src/h_bridge.cpp
     src/ultra_sensor.cpp
     src/bobot.cpp
+    src/proximity_sensor.cpp
+    src/servo.cpp
+    src/rgb_sensor.cpp
 )
 
 # needed for serial USB communication
