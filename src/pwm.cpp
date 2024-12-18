@@ -4,12 +4,20 @@
 
 void PWM::calculate_values() {
 
-    // calculate wrap and level
-    uint wrap = (CLOCK_SPEED / (float)frequency) - 1;
-    uint level = duty_cycle * (wrap + 1);
+    // set the clock divider
+    pwm_set_clkdiv(slice_num, CLKDIV);
 
-    // configure the PWM slice for the desired frequency
-    // (wrap value)
+    // wrap value
+    // the CPU starts counting, and this will be the last value where it is still going
+    // with the frequency, we set how many times a full cycle will be executed every second
+    uint wrap = (CLOCK_SPEED / CLKDIV / (float) frequency);
+
+    // level value
+    // this can range from 0 to wrap
+    // after the CPU reaches level, it switches from high to low
+    uint level = duty_cycle * wrap;
+
+    // configure the PWM slice for the desired frequency (wrap value)
     pwm_set_wrap(slice_num, wrap);
 
     // set the duty cycle (level value)
@@ -17,7 +25,9 @@ void PWM::calculate_values() {
 }
 
 PWM::PWM(uint _pin)
-    : pin(_pin), frequency(0), duty_cycle(0),
+    : pin(_pin),
+      frequency(0),
+      duty_cycle(0),
       slice_num(pwm_gpio_to_slice_num(_pin)),
       channel_num(pwm_gpio_to_channel(_pin)) {
     enable();
@@ -39,11 +49,10 @@ void PWM::disable() {
 void PWM::freq(uint _frequency) {
     frequency = _frequency;
 
-    // if we want a lower frequency, we'd need to increase
-    // the clock divider which introduces a ton of
-    // complexity
-    // TODO: solve this problem despite its complexity
-    frequency = std::clamp(frequency, 1907u, CLOCK_SPEED);
+    // The frequency cannot be lower than this value, otherwise wrap would overflow
+    // And it also cannot be higher than this value, since that is the maximum
+    // number of integer steps
+    frequency = std::clamp(frequency, CLOCK_SPEED / CLKDIV / 0xffff, CLOCK_SPEED / CLKDIV);
 
     calculate_values();
 }
@@ -55,9 +64,4 @@ void PWM::duty(float _duty_cycle) {
     duty_cycle = std::clamp(duty_cycle, 0.0f, 1.0f);
 
     calculate_values();
-}
-
-// TODO: this is not nice, rewrite the calculations with integers
-void PWM::duty(uint16_t level) {
-    duty((float)level / 0xffff);
 }

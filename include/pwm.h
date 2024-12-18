@@ -24,6 +24,12 @@ class PWM {
 
 public:
     static const uint CLOCK_SPEED = 125e6; // CPU clock speed, 125 MHz
+    // CPU clock divider, a higher value allowes much lower 
+    // frequencies to be set, but the precision slightly decreases at
+    // higher frequencies
+    // For our use cases, this shouldn't be an issue
+    // note: you can get the highest possible wrap value with CLOCK_SPEED / CLKDIV
+    static const uint CLKDIV = 100;
 
     PWM(uint _pin);
 
@@ -36,12 +42,8 @@ public:
     // currently, the valid range is only >=1907
     void freq(uint _frequency);
 
-    // Value between 0 and 1, representing the percentage 
+    // value between 0 and 1, representing the percentage 
     // of time the PWM signal is high within a single cycle
     void duty(float _duty_cycle);
-
-    // Integer value between 0 and 0xffff, representing the percentage 
-    // of time the PWM signal is high within a single cycle
-    void duty(uint16_t level);
 };
   
