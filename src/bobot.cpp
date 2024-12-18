@@ -10,7 +10,7 @@ Pin button = { BUTTON_PIN, GPIO_IN, true };
 UltraSensor ultra = { ULTRA_TRIG_PIN, ULTRA_ECHO_PIN };
 // ProximitySensor proxy = {};
 RgbSensor rgb_sensor = {};
-Servo servo = { 16, 550, 1400, 2390 };
+Servo servo = { 16, 0.032f, 0.075f, 0.13f };
 
 struct repeating_timer ultra_trig_up_timer;
 struct repeating_timer ultra_trig_down_timer;

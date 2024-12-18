@@ -7,10 +7,10 @@
 class Servo {
 private:
     PWM pwm;
-    uint16_t min, mid, max;
+    float min, mid, max;
 
 public:
-    Servo(uint pin, uint16_t min, uint16_t mid, uint16_t max);
+    Servo(uint pin, float _min, float _mid, float _max);
 
     void duty(float d);
 
