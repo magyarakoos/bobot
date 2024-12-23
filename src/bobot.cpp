@@ -12,6 +12,8 @@ UltraSensor ultra = { ULTRA_TRIG_PIN, ULTRA_ECHO_PIN };
 RgbSensor rgb_sensor = {};
 Servo servo = { 16, 0.032f, 0.075f, 0.13f };
 
+float last_hb_l = 0, last_hb_r = 0;
+
 struct repeating_timer ultra_trig_up_timer;
 struct repeating_timer ultra_trig_down_timer;
 
@@ -42,6 +44,8 @@ void enable() {
 
     bobot_enabled = true;
 
+    hb.drive(last_hb_l, last_hb_r);
+
     buzzer.enable();
     ultra.enable();
 }
@@ -52,8 +56,12 @@ void disable() {
 
     bobot_enabled = false;
 
-    buzzer.disable();
+    last_hb_l = hb.l_speed;
+    last_hb_r = hb.r_speed;
+    hb.drive(0, 0);
+
     ultra.disable();
+    buzzer.disable();
 }
 
 void toggle() {
