@@ -43,7 +43,6 @@ void enable() {
     bobot_enabled = true;
 
     buzzer.enable();
-    hb.enable();
     ultra.enable();
 }
 
@@ -54,7 +53,6 @@ void disable() {
     bobot_enabled = false;
 
     buzzer.disable();
-    hb.disable();
     ultra.disable();
 }
 

@@ -14,5 +14,7 @@ int main() {
     sleep_ms(1000);
     Bobot::servo.deg(0);
 
+    Bobot::hb.drive(0, 0);
+
     while (1);
 }
