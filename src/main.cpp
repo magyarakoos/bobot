@@ -6,15 +6,7 @@ int main() {
     stdio_init_all();
     Bobot::init();
 
-    Bobot::servo.deg(0);
-    sleep_ms(1000);
-    Bobot::servo.deg(-90);
-    sleep_ms(1000);
-    Bobot::servo.deg(90);
-    sleep_ms(1000);
-    Bobot::servo.deg(0);
-
-    Bobot::hb.drive(1, 1);
+    Bobot::hb.drive(0.5, 0.5);
 
     while (1);
 }

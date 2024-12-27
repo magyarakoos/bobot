@@ -36,6 +36,8 @@ void init() {
     add_repeating_timer_ms(-60, &ultra_trig_down, NULL, &ultra_trig_down_timer);
 
     gpio_set_irq_enabled_with_callback(button.pin, GPIO_IRQ_EDGE_FALL, true, &gpio_irq);
+
+    servo.deg(0);
 }
 
 void enable() {
@@ -44,8 +46,7 @@ void enable() {
 
     bobot_enabled = true;
 
-    hb.drive(last_hb_l, last_hb_r);
-
+    hb.enable();
     buzzer.enable();
     ultra.enable();
 }
@@ -56,12 +57,9 @@ void disable() {
 
     bobot_enabled = false;
 
-    last_hb_l = hb.l_speed;
-    last_hb_r = hb.r_speed;
-    hb.drive(0, 0);
-
-    ultra.disable();
+    hb.disable();
     buzzer.disable();
+    ultra.disable();
 }
 
 void toggle() {
