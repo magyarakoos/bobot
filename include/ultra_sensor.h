@@ -6,7 +6,7 @@
 
 // Ultrasound sensor controller
 class UltraSensor {
-    bool enabled = true;
+    volatile bool enabled;
 
     // conversion constant for the speed of sound
     static constexpr float METERS_PER_US = 0.0001715f;
@@ -15,6 +15,7 @@ class UltraSensor {
     // maximum range of the sensor
     static constexpr float MAX_DIST = 4.0f;
 
+    volatile uint64_t last_dist;
 public:
     Pin trig;
     Pin echo;

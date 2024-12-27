@@ -8,13 +8,13 @@
 #include "rgb_sensor.h"
 #include "servo.h"
 #include "ultra_sensor.h"
+#include <functional>
 
 // wrapper for the peripheral drivers for Bobot
 // it's particularly useful for the IRQ function
 // since this way it can access everything
 namespace Bobot {
 
-// TODO: replace these with a config file
 static const uint BUZZER_PIN = 4;
 static const uint BUTTON_PIN = 0;
 static const uint ULTRA_TRIG_PIN = 20;
@@ -35,6 +35,8 @@ extern Servo servo;
 extern ProximitySensor proxy;
 extern RgbSensor rgb_sensor;
 
+using GpioIrq = std::function<void()>;
+
 // initialize Bobot functinonality
 void init();
 
@@ -46,6 +48,9 @@ void disable();
 
 // toggles all peripherals of Bobot
 void toggle();
+
+// convenience function for setting up gpio irq callbacks
+void add_irq(uint gpio, bool is_fall, GpioIrq callback);
 
 // static gpio IRQ function, which gets called whenever
 // an interrupt is triggered

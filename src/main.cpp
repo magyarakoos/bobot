@@ -6,7 +6,8 @@ int main() {
     stdio_init_all();
     Bobot::init();
 
-    Bobot::hb.drive(0.5, 0.5);
-
-    while (1);
+    while (1) {
+        printf("%f\n", Bobot::ultra.distance());
+        sleep_ms(60);
+    }
 }
