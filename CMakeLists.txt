@@ -30,6 +30,7 @@ add_executable(${PROJECT_NAME}
     src/proximity_sensor.cpp
     src/servo.cpp
     src/rgb_sensor.cpp
+    src/pid.cpp
 )
 
 # needed for serial USB communication
