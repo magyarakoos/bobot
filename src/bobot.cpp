@@ -2,15 +2,13 @@
 
 namespace Bobot {
 
-PWM buzzer = { BUZZER_PIN };
-HBridge hb = { 10, 11, 12, 13, 14, 15, 2000 };
+PWM buzzer(BUZZER_PIN);
+HBridge hb(HB_L1_PIN, HB_L2_PIN, HB_R1_PIN, HB_R2_PIN, HB_EEP_PIN, HB_ULT_PIN, HB_PWM_FREQ);
 OnboardLed led;
-Pin button = { BUTTON_PIN, GPIO_IN, true };
-UltraSensor ultra = { ULTRA_TRIG_PIN, ULTRA_ECHO_PIN };
-RgbSensor rgb_sensor = {};
-Servo servo = { 16, 0.032f, 0.075f, 0.13f };
-
-float last_hb_l = 0, last_hb_r = 0;
+Pin button(BUTTON_PIN, GPIO_IN, true);
+UltraSensor ultra(ULTRA_TRIG_PIN, ULTRA_ECHO_PIN);
+RgbSensor rgb_sensor;
+Servo servo(SERVO_PIN, SERVO_MIN, SERVO_MID, SERVO_MAX);
 
 struct repeating_timer ultra_trig_up_timer;
 struct repeating_timer ultra_trig_down_timer;
@@ -36,7 +34,7 @@ void init() {
 
     add_irq(button.pin, true, [&]() {
         uint64_t now = time_us_64();
-        if (now - last_pause_us >= DEBOUNCE_INTERVAL_US) {
+        if (now - last_pause_us >= BUTTON_DEBOUNCE_INTERVAL_US) {
             last_pause_us = now;
             toggle();
         }

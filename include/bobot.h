@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional>
 #include "h_bridge.h"
 #include "onboard_led.h"
 #include "pin.h"
@@ -8,18 +9,12 @@
 #include "rgb_sensor.h"
 #include "servo.h"
 #include "ultra_sensor.h"
-#include <functional>
+#include "config.h"
 
 // wrapper for the peripheral drivers for Bobot
 // it's particularly useful for the IRQ function
 // since this way it can access everything
 namespace Bobot {
-
-static const uint BUZZER_PIN = 4;
-static const uint BUTTON_PIN = 0;
-static const uint ULTRA_TRIG_PIN = 20;
-static const uint ULTRA_ECHO_PIN = 19;
-static const uint DEBOUNCE_INTERVAL_US = 5e5;
 
 // private bobot state variables
 static volatile bool bobot_enabled = true;
