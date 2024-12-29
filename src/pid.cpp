@@ -6,15 +6,15 @@ float PID::error(float pv) {
 }
 
 float PID::P(float pv) {
-    return K_p * pv;
+    return K_p * error(pv);
 }
 
 float PID::I(float pv, int64_t dt) {
-    return K_i * (integral += pv * dt);
+    return K_i * (integral += error(pv) * dt);
 }
 
 float PID::D(float pv, int64_t dt) {
-    return K_d * (error(pv) / dt);
+    return K_d * ((error(pv) - last_error) / dt);
 }
 
 PID::PID(float _sp, float _K_p, float _K_i, float _K_d, float _min_integral, float _max_integral)
