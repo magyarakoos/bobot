@@ -1,0 +1,22 @@
+#pragma once
+
+#include "hardware/i2c.h"
+#include "pico/stdlib.h"
+
+class I2C {
+    uint sda_pin;
+    uint scl_pin;
+    uint i2c_index;
+
+public:
+    I2C(uint _sda_pin, uint _scl_pin, uint i2c_index);
+    ~I2C();
+
+    void enable();
+    void disable();
+
+    // where is memaddr supposed to be used?
+    uint8_t* read(uint8_t addr, uint8_t memaddr, uint nbytes);
+
+    void write(uint8_t addr, uint8_t memaddr, uint8_t* buf, uint8_t nbytes);
+};

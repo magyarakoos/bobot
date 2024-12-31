@@ -31,6 +31,7 @@ add_executable(${PROJECT_NAME}
     src/servo.cpp
     src/rgb_sensor.cpp
     src/pid.cpp
+    src/i2c.cpp
 )
 
 # needed for serial USB communication
@@ -47,4 +48,6 @@ target_link_libraries(${PROJECT_NAME}
     pico_stdlib
     pico_cyw43_arch_none
     hardware_pwm
-    hardware_clocks)
+    hardware_clocks
+    hardware_i2c
+)

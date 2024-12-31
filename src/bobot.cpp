@@ -10,6 +10,8 @@ UltraSensor ultra(ULTRA_TRIG_PIN, ULTRA_ECHO_PIN);
 RgbSensor rgb_sensor;
 Servo servo(SERVO_PIN, SERVO_MIN, SERVO_MID, SERVO_MAX);
 
+Pin rgb_sensor_led(17);
+
 struct repeating_timer ultra_trig_up_timer;
 struct repeating_timer ultra_trig_down_timer;
 
@@ -41,6 +43,8 @@ void init() {
     });
 
     servo.deg(0);
+
+    rgb_sensor_led.value(0);
 }
 
 void enable() {
