@@ -1,24 +1,23 @@
 #include <stdio.h>
 #include "bobot.h"
 #include "pico/stdlib.h"
-
 #include "pid.h"
 
 #include <iostream>
 
-// void pid_distancing() {
-//     PID pid(0.3, 2, 0, 0, 0, 0);
-//     while (1) {
-//         float dist = Bobot::ultra.distance();
+void pid_distancing() {
+    PID pid(0.3, 2, 0, 0, 0, 0);
+    while (1) {
+        float dist = Bobot::ultra.distance();
 
-//         if (dist == -1) dist = 0.3;
+        if (dist == -1) dist = 0.3;
 
-//         float out = pid.compute(dist);
-//         Bobot::hb.drive(-out, -out);
+        float out = pid.compute(dist);
+        Bobot::hb.drive(-out, -out);
 
-//         sleep_ms(60);
-//     }
-// }
+        sleep_ms(60);
+    }
+}
 
 int main() {
     stdio_init_all();
