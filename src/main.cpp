@@ -4,20 +4,32 @@
 
 #include "pid.h"
 
+#include <iostream>
+
+// void pid_distancing() {
+//     PID pid(0.3, 2, 0, 0, 0, 0);
+//     while (1) {
+//         float dist = Bobot::ultra.distance();
+
+//         if (dist == -1) dist = 0.3;
+
+//         float out = pid.compute(dist);
+//         Bobot::hb.drive(-out, -out);
+
+//         sleep_ms(60);
+//     }
+// }
+
 int main() {
     stdio_init_all();
     Bobot::init();
 
-    PID pid(0.3, 2, 0, 0, 0, 0);
+    Bobot::rgb_sensor.led.value(1);
 
     while (1) {
-        float dist = Bobot::ultra.distance();
+        std::array<uint16_t, 4> values = Bobot::rgb_sensor.get_data();
 
-        if (dist == -1) dist = 0.3;
-
-        float out = pid.compute(dist);
-        Bobot::hb.drive(-out, -out);
-
-        sleep_ms(60);
+        std::cout << values[0] << " " << values[1] << " " << values[2] << " " << values[3] << "\n";
+        sleep_ms(100);
     }
 }

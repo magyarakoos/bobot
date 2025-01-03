@@ -7,10 +7,13 @@ HBridge hb(HB_L1_PIN, HB_L2_PIN, HB_R1_PIN, HB_R2_PIN, HB_EEP_PIN, HB_ULT_PIN, H
 OnboardLed led;
 Pin button(BUTTON_PIN, GPIO_IN, true);
 UltraSensor ultra(ULTRA_TRIG_PIN, ULTRA_ECHO_PIN);
-RgbSensor rgb_sensor;
+RgbSensor rgb_sensor(RGB_SENSOR_SDA_PIN,
+                     RGB_SENSOR_SCL_PIN,
+                     RGB_SENSOR_CHAN,
+                     RGB_SENSOR_LED_PIN,
+                     RGB_SENSOR_INTEGRATION_TIME,
+                     RGB_SENSOR_GAIN);
 Servo servo(SERVO_PIN, SERVO_MIN, SERVO_MID, SERVO_MAX);
-
-Pin rgb_sensor_led(17);
 
 struct repeating_timer ultra_trig_up_timer;
 struct repeating_timer ultra_trig_down_timer;
@@ -43,8 +46,7 @@ void init() {
     });
 
     servo.deg(0);
-
-    rgb_sensor_led.value(0);
+    rgb_sensor.led.value(0);
 }
 
 void enable() {

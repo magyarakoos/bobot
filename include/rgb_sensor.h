@@ -23,8 +23,6 @@ class RgbSensor {
     uint8_t address;
     I2C i2c;
 
-    Pin led;
-
     void write8(uint8_t reg, uint8_t value);
 
     uint8_t read8(uint8_t reg);
@@ -35,10 +33,12 @@ public:
     RgbSensor(uint sda_pin,
               uint scl_pin,
               uint i2c_address,
-              uint _address = DEFAULT_ADDRESS,
               uint led_pin,
               uint integration_time,
-              uint gain);
+              uint gain,
+              uint _address = DEFAULT_ADDRESS);
+
+    Pin led;
 
     std::array<uint16_t, 4> get_data();
 

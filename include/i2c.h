@@ -9,14 +9,14 @@ class I2C {
     uint i2c_index;
 
 public:
-    I2C(uint _sda_pin, uint _scl_pin, uint i2c_index);
+    I2C(uint _sda_pin, uint _scl_pin, uint i2c_index = i2c_get_index(i2c_default));
     ~I2C();
 
     void enable();
     void disable();
 
     // where is memaddr supposed to be used?
-    uint8_t* read(uint8_t addr, uint8_t memaddr, uint nbytes);
+    void read(uint8_t addr, uint8_t memaddr, uint8_t* buf, uint nbytes);
 
-    void write(uint8_t addr, uint8_t memaddr, uint8_t* buf, uint8_t nbytes);
+    void write(uint8_t addr, uint8_t memaddr, const uint8_t* buf, uint8_t nbytes);
 };

@@ -3,10 +3,10 @@
 RgbSensor::RgbSensor(uint sda_pin,
                      uint scl_pin,
                      uint i2c_index,
-                     uint _address,
                      uint led_pin,
                      uint integration_time,
-                     uint gain)
+                     uint gain,
+                     uint _address)
     : i2c(sda_pin, scl_pin, i2c_index), address(_address), led(led_pin) {
 
     write_bits(REG_ENABLE, PON, PON);
@@ -18,12 +18,13 @@ RgbSensor::RgbSensor(uint sda_pin,
 }
 
 void RgbSensor::write8(uint8_t reg, uint8_t value) {
-    uint8_t buf[] = { value & 0xFF };
+    uint8_t buf[] = { value };
     i2c.write(address, CMD_BIT | reg, buf, 1);
 }
 
 uint8_t RgbSensor::read8(uint8_t reg) {
-    uint8_t* buf = i2c.read(address, CMD_BIT | reg, 1);
+    uint8_t buf[1] = { 0 };
+    i2c.read(address, CMD_BIT | reg, buf, 1);
     return buf[0];
 }
 
@@ -36,7 +37,8 @@ void RgbSensor::write_bits(uint8_t reg, uint8_t value, uint8_t mask) {
 }
 
 std::array<uint16_t, 4> RgbSensor::get_data() {
-    uint8_t* color_bytes = i2c.read(address, CMD_BIT | REG_CDATAL, 4 * 2);
+    uint8_t color_bytes[4 * 2] = { 0 };
+    i2c.read(address, CMD_BIT | REG_CDATAL, color_bytes, 4 * 2);
 
     std::array<uint16_t, 4> values;
     std::memcpy(values.data(), color_bytes, 4 * 2);

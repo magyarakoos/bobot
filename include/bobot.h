@@ -27,7 +27,6 @@ extern PWM buzzer;
 extern HBridge hb;
 extern OnboardLed led;
 extern Servo servo;
-extern ProximitySensor proxy;
 extern RgbSensor rgb_sensor;
 
 using GpioIrq = std::function<void()>;
