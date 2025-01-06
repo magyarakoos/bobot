@@ -2,6 +2,7 @@
 
 #include "hardware/i2c.h"
 #include "pico/stdlib.h"
+#include <string.h>
 
 class I2C {
     uint sda_pin;
@@ -15,7 +16,6 @@ public:
     void enable();
     void disable();
 
-    // where is memaddr supposed to be used?
     void read(uint8_t addr, uint8_t memaddr, uint8_t* buf, uint nbytes);
 
     void write(uint8_t addr, uint8_t memaddr, const uint8_t* buf, uint8_t nbytes);

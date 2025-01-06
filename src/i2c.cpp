@@ -26,9 +26,18 @@ void I2C::disable() {
 }
 
 void I2C::read(uint8_t addr, uint8_t memaddr, uint8_t* buf, uint nbytes) {
-    i2c_read_blocking(i2c_get_instance(i2c_index), addr, buf, nbytes, false);
+    uint8_t nbuf[nbytes + 1] = { 0 };
+    nbuf[0] = memaddr;
+
+    i2c_read_blocking(i2c_get_instance(i2c_index), addr, nbuf, nbytes, true);
+
+    memcpy(buf, nbuf + 1, nbytes);
 }
 
 void I2C::write(uint8_t addr, uint8_t memaddr, const uint8_t* buf, uint8_t nbytes) {
-    i2c_write_blocking(i2c_get_instance(i2c_index), addr, buf, nbytes, false);
+    uint8_t nbuf[nbytes + 1] = { 0 };
+    nbuf[0] = memaddr;
+    memcpy(nbuf + 1, buf, nbytes);
+
+    i2c_write_blocking(i2c_get_instance(i2c_index), addr, nbuf, nbytes, true);
 }
