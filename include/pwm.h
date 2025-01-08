@@ -39,7 +39,6 @@ public:
     void disable();
 
     // sets the number of PWM cycles per second
-    // currently, the valid range is only >=1907
     void freq(uint _frequency);
 
     // value between 0 and 1, representing the percentage 
