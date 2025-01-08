@@ -10,7 +10,8 @@ void pid_distancing() {
     while (1) {
         float dist = Bobot::ultra.distance();
 
-        if (dist == -1) dist = 0.3;
+        if (dist == -1)
+            dist = 0.3;
 
         float out = pid.compute(dist);
         Bobot::hb.drive(-out, -out);

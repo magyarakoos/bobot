@@ -1,7 +1,6 @@
 #include "i2c.h"
 
-I2C::I2C(uint _sda_pin, uint _scl_pin, uint _i2c_index)
-    : sda_pin(_sda_pin), scl_pin(_scl_pin), i2c_index(_i2c_index) {
+I2C::I2C(uint _sda_pin, uint _scl_pin, uint _i2c_index) : sda_pin(_sda_pin), scl_pin(_scl_pin), i2c_index(_i2c_index) {
     enable();
 }
 
@@ -26,18 +25,15 @@ void I2C::disable() {
 }
 
 void I2C::read(uint8_t addr, uint8_t memaddr, uint8_t* buf, uint nbytes) {
-    uint8_t nbuf[nbytes + 1] = { 0 };
-    nbuf[0] = memaddr;
+    const uint8_t membuf[1] = { memaddr };
+    i2c_write_burst_blocking(i2c_get_instance(i2c_index), addr, membuf, 1);
 
-    i2c_read_blocking(i2c_get_instance(i2c_index), addr, nbuf, nbytes, true);
-
-    memcpy(buf, nbuf + 1, nbytes);
+    i2c_read_burst_blocking(i2c_get_instance(i2c_index), addr, buf, nbytes);
 }
 
 void I2C::write(uint8_t addr, uint8_t memaddr, const uint8_t* buf, uint8_t nbytes) {
-    uint8_t nbuf[nbytes + 1] = { 0 };
-    nbuf[0] = memaddr;
-    memcpy(nbuf + 1, buf, nbytes);
+    const uint8_t membuf[1] = { memaddr };
+    i2c_write_burst_blocking(i2c_get_instance(i2c_index), addr, membuf, 1);
 
-    i2c_write_blocking(i2c_get_instance(i2c_index), addr, nbuf, nbytes, true);
+    i2c_write_burst_blocking(i2c_get_instance(i2c_index), addr, buf, nbytes);
 }
