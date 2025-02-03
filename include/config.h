@@ -29,3 +29,8 @@ const uint RGB_SENSOR_CHAN = 1;
 const uint RGB_SENSOR_LED_PIN = 17;
 const uint RGB_SENSOR_INTEGRATION_TIME = 40;
 const uint RGB_SENSOR_GAIN = 3;
+
+const uint ENC_LA = 6;
+const uint ENC_LB = 7;
+const uint ENC_RA = 8;
+const uint ENC_RB = 9;
