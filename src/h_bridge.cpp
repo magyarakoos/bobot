@@ -32,9 +32,15 @@ void HBridge::drive(float l, float r) {
     l_speed = std::clamp(l, -1.0f, 1.0f);
     r_speed = std::clamp(r, -1.0f, 1.0f);
 
-    l1.duty(fabsf(l_speed) * (l_speed > 0));
-    l2.duty(fabsf(l_speed) * (l_speed < 0));
+    if (l == 0 && r == 0) {
+        disable();
+    } else {
+        enable();
 
-    r1.duty(fabsf(r_speed) * (r_speed < 0));
-    r2.duty(fabsf(r_speed) * (r_speed > 0));
+        l1.duty(fabsf(l_speed) * (l_speed > 0));
+        l2.duty(fabsf(l_speed) * (l_speed < 0));
+
+        r1.duty(fabsf(r_speed) * (r_speed < 0));
+        r2.duty(fabsf(r_speed) * (r_speed > 0));
+    }
 }
