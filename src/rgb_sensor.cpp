@@ -18,7 +18,7 @@ RgbSensor::RgbSensor(uint sda_pin,
 }
 
 void RgbSensor::write8(uint8_t reg, uint8_t value) {
-    uint8_t buf[] = { value };
+    uint8_t buf[1] = { value };
     i2c.write(address, CMD_BIT | reg, buf, 1);
 }
 

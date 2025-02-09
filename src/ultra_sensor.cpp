@@ -29,16 +29,17 @@ void UltraSensor::disable() {
 }
 
 float UltraSensor::distance() {
-    float distance;
+
+    float dist;
     if (rise > fall) {
-        distance = last_dist;
+        dist = last_dist;
     } else {
-        distance = (fall - rise) * METERS_PER_US;
-        last_dist = distance;
+        dist = (fall - rise) * METERS_PER_US;
+        last_dist = dist;
     }
 
-    if (distance < MIN_DIST || distance > MAX_DIST)
+    if (dist < MIN_DIST || dist > MAX_DIST)
         return -1;
 
-    return distance;
+    return dist;
 }

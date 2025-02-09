@@ -1,6 +1,6 @@
-#pragma once 
+#pragma once
 
-#define uint unsigned int
+#include "pico/stdlib.h"
 
 const uint BUZZER_PIN = 4;
 
@@ -29,6 +29,8 @@ const uint RGB_SENSOR_CHAN = 1;
 const uint RGB_SENSOR_LED_PIN = 17;
 const uint RGB_SENSOR_INTEGRATION_TIME = 40;
 const uint RGB_SENSOR_GAIN = 3;
+
+const uint PROXY_PIN = 2; // not final
 
 const uint ENC_LA = 6;
 const uint ENC_LB = 7;

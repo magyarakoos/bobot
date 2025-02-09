@@ -1,12 +1,10 @@
 #pragma once
 
-#include <optional>
 #include "pico/stdlib.h"
 #include "pin.h"
 
 // Ultrasound sensor controller
 class UltraSensor {
-    volatile bool enabled;
 
     // conversion constant for the speed of sound
     static constexpr float METERS_PER_US = 0.0001715f;
@@ -16,7 +14,10 @@ class UltraSensor {
     static constexpr float MAX_DIST = 4.0f;
 
     volatile uint64_t last_dist;
+
 public:
+    volatile bool enabled;
+
     Pin trig;
     Pin echo;
 

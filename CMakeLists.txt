@@ -25,13 +25,13 @@ add_executable(${PROJECT_NAME}
     src/pwm.cpp
     src/onboard_led.cpp
     src/h_bridge.cpp
-    src/ultra_sensor.cpp
     src/bobot.cpp
-    src/proximity_sensor.cpp
+    src/ultra_sensor.cpp
     src/servo.cpp
-    src/rgb_sensor.cpp
     src/pid.cpp
-    src/i2c.cpp
+    # src/encoder.cpp
+    # src/rgb_sensor.cpp
+    # src/i2c.cpp
 )
 
 # needed for serial USB communication

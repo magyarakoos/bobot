@@ -118,6 +118,7 @@
         "stop_token": "cpp",
         "thread": "cpp",
         "valarray": "cpp",
-        "*.inc": "cpp"
+        "*.inc": "cpp",
+        "coroutine": "cpp"
     }
 }

@@ -1,15 +1,14 @@
 #pragma once
 
 #include <functional>
+#include "config.h"
 #include "h_bridge.h"
 #include "onboard_led.h"
 #include "pin.h"
-#include "proximity_sensor.h"
 #include "pwm.h"
 #include "rgb_sensor.h"
 #include "servo.h"
 #include "ultra_sensor.h"
-#include "config.h"
 
 // wrapper for the peripheral drivers for Bobot
 // it's particularly useful for the IRQ function
@@ -27,7 +26,8 @@ extern PWM buzzer;
 extern HBridge hb;
 extern OnboardLed led;
 extern Servo servo;
-extern RgbSensor rgb_sensor;
+extern Pin proxy;
+// extern RgbSensor rgb_sensor;
 
 using GpioIrq = std::function<void()>;
 

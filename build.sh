@@ -14,4 +14,4 @@ picotool load -f bobot.uf2
 
 # note: this is usually redundant, but occasionally
 # the device wouldn't reboot on its own
-picotool reboot
+# picotool reboot
