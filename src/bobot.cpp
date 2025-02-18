@@ -3,7 +3,7 @@
 namespace Bobot {
 
 PWM buzzer(BUZZER_PIN);
-HBridge hb(HB_L1_PIN, HB_L2_PIN, HB_R1_PIN, HB_R2_PIN, HB_EEP_PIN, HB_ULT_PIN, HB_PWM_FREQ);
+// HBridge hb(HB_L1_PIN, HB_L2_PIN, HB_R1_PIN, HB_R2_PIN, HB_EEP_PIN, HB_ULT_PIN, HB_PWM_FREQ);
 OnboardLed led;
 Pin button(BUTTON_PIN, GPIO_IN, true);
 UltraSensor ultra(ULTRA_TRIG_PIN, ULTRA_ECHO_PIN);
@@ -14,7 +14,7 @@ UltraSensor ultra(ULTRA_TRIG_PIN, ULTRA_ECHO_PIN);
 //                      RGB_SENSOR_INTEGRATION_TIME,
 //                      RGB_SENSOR_GAIN);
 Servo servo(SERVO_PIN, SERVO_MIN, SERVO_MID, SERVO_MAX);
-Pin proxy(PROXY_PIN, GPIO_IN, true);
+// Pin proxy(PROXY_PIN, GPIO_IN, true);
 
 struct repeating_timer ultra_trig_up_timer;
 struct repeating_timer ultra_trig_down_timer;
@@ -49,7 +49,7 @@ void init() {
     add_repeating_timer_ms(-60, &ultra_trig_down, NULL, &ultra_trig_down_timer);
 
     add_irq(button.pin, true, &pause_callback);
-    add_irq(proxy.pin, true, &pause_callback);
+    // add_irq(proxy.pin, true, &pause_callback);
 
     servo.deg(0);
     // rgb_sensor.led.value(0);
@@ -61,7 +61,7 @@ void enable() {
 
     bobot_enabled = true;
 
-    hb.enable();
+    // hb.enable();
     buzzer.enable();
     ultra.enable();
 }
@@ -72,7 +72,7 @@ void disable() {
 
     bobot_enabled = false;
 
-    hb.disable();
+    // hb.disable();
     buzzer.disable();
     ultra.disable();
 }

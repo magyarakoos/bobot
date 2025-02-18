@@ -11,17 +11,17 @@ class HBridge {
     PWM r1;
     PWM r2;
 
-    // NOTE: these pins are currently unused
     // enables / disables the H-bridge
     Pin eep;
-    // fault pin
-    Pin ult;
 
     float last_l_speed;
     float last_r_speed;
 public:
     float l_speed;
     float r_speed;
+
+    // fault pin
+    Pin ult;
 
     HBridge(uint _l1, uint _l2, uint _r1, uint _r2, uint _eep, uint _ult, uint pwm_freq);
 
