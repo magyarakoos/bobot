@@ -1,22 +1,23 @@
 #include "bobot.h"
-#include "h_bridge.h"
-// #include "pin.h"
-// #include "pico/stdlib.h"
-// #include "pin.h"
-// #include "h_bridge.h"
+// #include "onboard_led.h"
 
 int main() {
+    // OnboardLed led;
+    // led.on();
     Bobot::init();
     Bobot::led.on();
-    Pin r1(12), r2(13);
-    r1.value(1);
-    r2.value(1);
+    Bobot::hb.drive(-1, -1);
+    // HBridge hb(10, 11, 8, 9, 14, 15, 2000);
+    // hb.drive(1, 1);
+    // sleep_ms(1000);
+    // Bobot::led.off();
+    // hb.drive(0.3, 0.3);
     while (1) {
-        // if (Bobot::hb.ult.value()) {
-        //     Bobot::led.off();
+        // if (hb.ult.value()) {
+        //     Bobot::led.on(); 
         // } else {
-        //     Bobot::led.on();
+        //     Bobot::led.off();
         // }
-        // sleep_ms(10);
+        // sleep_ms(1000);
     }
 }

@@ -4,6 +4,10 @@
 Pin::Pin(uint _pin, bool _out, bool _pull_up) : pin(_pin), out(_out), _value(0) {
     enable();
 
+    if (_out) {
+        value(_value);
+    }
+
     if (_pull_up)
         gpio_pull_up(pin);
 }

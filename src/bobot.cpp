@@ -3,7 +3,7 @@
 namespace Bobot {
 
 PWM buzzer(BUZZER_PIN);
-// HBridge hb(HB_L1_PIN, HB_L2_PIN, HB_R1_PIN, HB_R2_PIN, HB_EEP_PIN, HB_ULT_PIN, HB_PWM_FREQ);
+HBridge hb(HB_L1_PIN, HB_L2_PIN, HB_L_PWM, HB_R1_PIN, HB_R2_PIN, HB_R_PWM, HB_PWM_FREQ);;
 OnboardLed led;
 Pin button(BUTTON_PIN, GPIO_IN, true);
 UltraSensor ultra(ULTRA_TRIG_PIN, ULTRA_ECHO_PIN);
@@ -61,7 +61,7 @@ void enable() {
 
     bobot_enabled = true;
 
-    // hb.enable();
+    hb.enable();
     buzzer.enable();
     ultra.enable();
 }
@@ -72,7 +72,7 @@ void disable() {
 
     bobot_enabled = false;
 
-    // hb.disable();
+    hb.disable();
     buzzer.disable();
     ultra.disable();
 }

@@ -5,14 +5,14 @@
 
 // motor controller
 class HBridge {
-    PWM l1;
-    PWM l2;
+    Pin l1;
+    Pin l2;
+    PWM l_pwm;
 
-    PWM r1;
-    PWM r2;
+    Pin r1;
+    Pin r2;
+    PWM r_pwm;
 
-    // enables / disables the H-bridge
-    Pin eep;
 
     float last_l_speed;
     float last_r_speed;
@@ -20,10 +20,7 @@ public:
     float l_speed;
     float r_speed;
 
-    // fault pin
-    Pin ult;
-
-    HBridge(uint _l1, uint _l2, uint _r1, uint _r2, uint _eep, uint _ult, uint pwm_freq);
+    HBridge(uint _l1, uint _l2, uint l_pwm, uint _r1, uint _r2, uint r_pwm, uint pwm_freq);
 
     void enable();
     void disable();

@@ -2,7 +2,7 @@
 
 #include <functional>
 #include "config.h"
-// #include "h_bridge.h"
+#include "h_bridge.h"
 #include "onboard_led.h"
 #include "pin.h"
 #include "pwm.h"
@@ -23,7 +23,7 @@ static volatile uint64_t last_pause_us = 0;
 extern Pin button;
 extern UltraSensor ultra;
 extern PWM buzzer;
-// extern HBridge hb;
+extern HBridge hb;
 extern OnboardLed led;
 extern Servo servo;
 extern Pin proxy;
