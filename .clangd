@@ -1,0 +1,14 @@
+CompileFlags:
+  CompilationDatabase: build/
+  Add: 
+    - --target=arm-none-eabi
+    - -isystem
+    - /usr/lib/gcc/arm-none-eabi/14.2.0/include
+    - -isystem
+    - /usr/lib/gcc/arm-none-eabi/14.2.0/include-fixed
+    - -isystem
+    - /usr/arm-none-eabi/include
+
+
+Diagnostics:
+  Suppress: ["pp_hash_error"]
