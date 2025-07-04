@@ -65,3 +65,4 @@ void PWM::duty(float _duty_cycle) {
 
     calculate_values();
 }
+
