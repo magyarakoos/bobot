@@ -1,6 +1,7 @@
 #include "servo.h"
-#include <algorithm>
-#include <cmath>
+#include "utils.h"
+
+#define M_PI 3.1415926535
 
 Servo::Servo(uint pin, float _min, float _mid, float _max) : pwm(PWM(pin)) {
     min = _min;
@@ -11,7 +12,7 @@ Servo::Servo(uint pin, float _min, float _mid, float _max) : pwm(PWM(pin)) {
 }
 
 void Servo::duty(float d) {
-    d = 1 - std::clamp(d, 0.0f, 1.0f);
+    d = 1 - clamp(d, 0.0f, 1.0f);
 
     float duty;
     if (d <= 0.5)

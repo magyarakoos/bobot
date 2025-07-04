@@ -1,4 +1,5 @@
 #include "encoder.h"
+#include "pico/stdlib.h"
 
 Encoder::Encoder() : n(0), last_revolution(0), dt_sum(0) {}
 

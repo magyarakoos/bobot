@@ -1,8 +1,6 @@
 #pragma once
 
 #include "hardware/i2c.h"
-#include "pico/stdlib.h"
-#include <string.h>
 
 class I2C {
     uint sda_pin;

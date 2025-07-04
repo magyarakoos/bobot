@@ -1,9 +1,6 @@
 #include "h_bridge.h"
 #include "pico/stdlib.h"
-
-#include <algorithm>
-#include <cmath>
-#include <cstdio>
+#include "utils.h"
 
 HBridge::HBridge(uint _l1, uint _l2, uint _r1, uint _r2, uint _eep, uint _ult, uint pwm_freq)
     : l1(_l1), l2(_l2), r1(_r1), r2(_r2), eep(_eep), last_l_speed(0), last_r_speed(0), ult(_ult, GPIO_IN, true) {
@@ -30,19 +27,19 @@ void HBridge::disable() {
 
 void HBridge::drive_raw(float l, float r) {
 
-    l1.duty(fabsf(l) * (l > 0));
-    l2.duty(fabsf(l) * (l < 0));
+    l1.duty(abs(l) * (l > 0));
+    l2.duty(abs(l) * (l < 0));
 
-    r1.duty(fabsf(r) * (r > 0));
-    r2.duty(fabsf(r) * (r < 0));
+    r1.duty(abs(r) * (r > 0));
+    r2.duty(abs(r) * (r < 0));
 }
 
 void HBridge::drive(float l, float r) {
 
-    l = std::clamp(l, -1.0f, 1.0f);
-    r = std::clamp(r, -1.0f, 1.0f);
+    l = clamp(l, -1.0f, 1.0f);
+    r = clamp(r, -1.0f, 1.0f);
 
-    int step_count = round(std::max(fabsf(l - l_speed), fabsf(r - r_speed)) / STEP_SIZE);
+    int step_count = max(abs(l - l_speed), abs(r - r_speed)) / STEP_SIZE;
     for (int i = 0; i <= step_count; i++) {
         float t = (float) i / step_count;
 

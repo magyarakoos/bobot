@@ -1,7 +1,7 @@
 #include "pin.h"
 #include "pico/stdlib.h"
 
-Pin::Pin(uint _pin, bool _out, bool _pull_up) : pin(_pin), out(_out), _value(0) {
+Pin::Pin(uint _pin, bool _out, bool _pull_up) : out(_out), _value(0), pin(_pin) {
     enable();
 
     if (_out) {

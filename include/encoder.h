@@ -1,8 +1,6 @@
 #pragma once
 
 #include <stdint.h>
-#include <algorithm>
-#include "pico/stdlib.h"
 
 enum Channel : uint8_t { A = 0b01, B = 0b10 };
 

@@ -1,4 +1,5 @@
 #include "rgb_sensor.h"
+#include <cstring>
 
 RgbSensor::RgbSensor(uint sda_pin,
                      uint scl_pin,
@@ -7,7 +8,7 @@ RgbSensor::RgbSensor(uint sda_pin,
                      uint integration_time,
                      uint gain,
                      uint _address)
-    : i2c(sda_pin, scl_pin, i2c_index), address(_address), led(led_pin) {
+    : address(_address), i2c(sda_pin, scl_pin, i2c_index), led(led_pin) {
 
     write_bits(REG_ENABLE, PON, PON);
     sleep_ms(10);

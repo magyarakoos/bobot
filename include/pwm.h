@@ -1,12 +1,9 @@
 #pragma once
 
 #include "pico/stdlib.h"
-#include "hardware/pwm.h"
-
-#include "pin.h"
 
 // abstraction for the hardware PWM's
-// it's useful because we can configure it with frequency 
+// it's useful because we can configure it with frequency
 // and duty cycle, instead of wrap and level
 //
 // by default, the PWM is enabled
@@ -24,7 +21,7 @@ class PWM {
 
 public:
     static const uint CLOCK_SPEED = 125e6; // CPU clock speed, 125 MHz
-    // CPU clock divider, a higher value allowes much lower 
+    // CPU clock divider, a higher value allowes much lower
     // frequencies to be set, but the precision slightly decreases at
     // higher frequencies
     // For our use cases, this shouldn't be an issue
@@ -41,8 +38,8 @@ public:
     // sets the number of PWM cycles per second
     void freq(uint _frequency);
 
-    // value between 0 and 1, representing the percentage 
+    // value between 0 and 1, representing the percentage
     // of time the PWM signal is high within a single cycle
     void duty(float _duty_cycle);
 };
-  
+

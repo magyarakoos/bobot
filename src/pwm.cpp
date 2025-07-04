@@ -1,6 +1,6 @@
 #include "pwm.h"
-#include <algorithm>
-#include <iostream>
+#include "hardware/pwm.h"
+#include "utils.h"
 
 void PWM::calculate_values() {
 
@@ -52,7 +52,7 @@ void PWM::freq(uint _frequency) {
     // The frequency cannot be lower than this value, otherwise wrap would overflow
     // And it also cannot be higher than this value, since that is the maximum
     // number of integer steps
-    frequency = std::clamp(frequency, CLOCK_SPEED / CLKDIV / 0xffff, CLOCK_SPEED / CLKDIV);
+    frequency = clamp(frequency, CLOCK_SPEED / CLKDIV / 0xffff, CLOCK_SPEED / CLKDIV);
 
     calculate_values();
 }
@@ -61,8 +61,7 @@ void PWM::duty(float _duty_cycle) {
     duty_cycle = _duty_cycle;
 
     // duty cycle should be between 0 and 1
-    duty_cycle = std::clamp(duty_cycle, 0.0f, 1.0f);
+    duty_cycle = clamp(duty_cycle, 0.0f, 1.0f);
 
     calculate_values();
 }
-

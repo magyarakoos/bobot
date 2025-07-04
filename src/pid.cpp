@@ -18,14 +18,14 @@ float PID::D(float pv, int64_t dt) {
 }
 
 PID::PID(float _sp, float _K_p, float _K_i, float _K_d, float _min_integral, float _max_integral)
-    : last_error(0),
-      last_compute_t(0),
-      sp(_sp),
-      K_p(_K_p),
+    : K_p(_K_p),
       K_i(_K_i),
       K_d(_K_d),
+      last_error(0),
+      last_compute_t(0),
       min_integral(_min_integral),
-      max_integral(_max_integral) {}
+      max_integral(_max_integral),
+      sp(_sp) {}
 
 float PID::compute(float pv) {
     int64_t now = time_us_64(), dt = now - last_compute_t;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pico/stdlib.h"
+#include "pin.h"
 #include "pwm.h"
 
 // motor controller

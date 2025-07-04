@@ -1,4 +1,5 @@
 #include "i2c.h"
+#include "pico/stdlib.h"
 
 I2C::I2C(uint _sda_pin, uint _scl_pin, uint _i2c_index) : sda_pin(_sda_pin), scl_pin(_scl_pin), i2c_index(_i2c_index) {
     enable();

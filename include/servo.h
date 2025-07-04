@@ -1,6 +1,5 @@
 #pragma once
 
-#include "pico/stdlib.h"
 #include "pwm.h"
 
 class Servo {

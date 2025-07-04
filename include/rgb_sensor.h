@@ -2,9 +2,7 @@
 
 #include <stdint.h>
 #include <array>
-#include <string.h>
 #include "i2c.h"
-#include "pico/stdlib.h"
 #include "pin.h"
 
 class RgbSensor {
