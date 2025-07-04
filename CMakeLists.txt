@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.13)
 
+set(PICO_BOARD pico2_w CACHE STRING "Board type")
 set(PICO_SDK_PATH $ENV{PICO_SDK_PATH})
 set(PROJECT_NAME "bobot")
 
@@ -14,7 +15,6 @@ project(${PROJECT_NAME} C CXX ASM)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
-set(PICO_BOARD pico_w CACHE STRING "Board type")
 
 # initialize the Raspberry Pi Pico SDK
 pico_sdk_init()
@@ -25,10 +25,10 @@ add_executable(${PROJECT_NAME}
     src/pwm.cpp
     src/onboard_led.cpp
     src/h_bridge.cpp
-    src/bobot.cpp
+    # src/bobot.cpp
     src/ultra_sensor.cpp
     src/servo.cpp
-    src/pid.cpp
+    # src/pid.cpp
     # src/encoder.cpp
     # src/rgb_sensor.cpp
     # src/i2c.cpp

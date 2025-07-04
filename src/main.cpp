@@ -1,86 +1,58 @@
-#include <pico/stdlib.h>
-#include <cmath>
-#include <cstdio>
-#include "h_bridge.h"
+// #include <pico/stdlib.h>
+// #include <cstdio>
+#include "onboard_led.h"
+#include "pin.h"
 #include "pwm.h"
-
-#define ULT_PIN 4
-#define IN1_PIN 3
-#define IN2_PIN 2
-#define IN3_PIN 1
-#define IN4_PIN 0
-#define EEP_PIN 5
+// #include "pin.h"
+// #include "config.h"
+// #include "h_bridge.h"
+// #include "servo.h"
 
 int main() {
     stdio_init_all();
 
-    HBridge hb(IN1_PIN, IN2_PIN, IN3_PIN, IN4_PIN, EEP_PIN, ULT_PIN, 2000);
+    Pin r(0), g(1), b(2);
+    r.value(0);
+    g.value(0);
+    b.value(0);
 
-    hb.drive(1, 1);
+    // PWM r(0), g(1), b(2);
+    //
+    // r.freq(2000);
+    // g.freq(2000);
+    // b.freq(2000);
+    //
+    // r.duty(0);
+    // g.duty(0);
+    // b.duty(0);
 
-    sleep_ms(1000);
-
-    hb.drive(-1, -1);
-    sleep_ms(1000);
-
-    hb.disable();
-
-    sleep_ms(1000);
-
-    hb.enable();
-
-    // gpio_init(EEP_PIN);
-    // gpio_set_dir(EEP_PIN, GPIO_OUT);
-    //
-    // gpio_put(EEP_PIN, 1);
-    //
-    // gpio_init(ULT_PIN);
-    // gpio_set_dir(ULT_PIN, GPIO_IN);
-    // gpio_pull_up(ULT_PIN);
-    //
-    // // gpio_init(IN1_PIN);
-    // // gpio_set_dir(IN1_PIN, GPIO_OUT);
-    //
-    // gpio_init(IN2_PIN);
-    // gpio_set_dir(IN2_PIN, GPIO_OUT);
-    //
-    // // gpio_init(IN3_PIN);
-    // // gpio_set_dir(IN3_PIN, GPIO_OUT);
-    //
-    // gpio_init(IN4_PIN);
-    // gpio_set_dir(IN4_PIN, GPIO_OUT);
-    //
-    // // gpio_put(IN1_PIN, 0);
-    // gpio_put(IN2_PIN, 0);
-    // // gpio_put(IN3_PIN, 1);
-    // gpio_put(IN4_PIN, 0);
-    //
-    // PWM in1(IN1_PIN), in3(IN3_PIN);
-    //
-    // in1.freq(2000);
-    // in3.freq(2000);
-    //
-    // for (int i = 0; i <= 10; i++) {
-    //     in1.duty((float) i / 10);
-    //     in3.duty((float) i / 10);
-    //     sleep_ms(100);
-    //     // for (volatile int j = 0; j < 10; j++)
-    //     //     ;
-    // }
-
-    // while (true) {
-    //     // for (int i = 0; i < 10; i++) {
-    //     //     in3.duty((float) i / 10);
-    //     //     sleep_ms(200);
-    //     // }
-    //     // for (int i = 10; i >= 0; i--) {
-    //     //     in3.duty((float) i / 10);
-    //     //     sleep_ms(200);
-    //     // }
-    // }
-
-    while (true) {
-        printf("ULT:%d, L:%.2f, R:%.2f\n", (int) hb.ult.value(), hb.l_speed, hb.r_speed);
-        sleep_ms(1000);
+    OnboardLed led;
+    while (1) {
+        led.toggle();
+        sleep_ms(200);
     }
+    //
+    // HBridge hb(HB_L1_PIN, HB_L2_PIN, HB_R1_PIN, HB_R2_PIN, HB_EEP_PIN, HB_ULT_PIN, HB_PWM_FREQ);
+    // hb.drive(0, 0);
+    //
+    // PWM buzzer(BUZZER_PIN);
+    // // buzzer.freq(1000);
+    // // buzzer.duty(0.5);
+    //
+    // Servo servo(SERVO_PIN, SERVO_MIN, SERVO_MID, SERVO_MAX);
+    // servo.deg(0);
+    // // sleep_ms(1000);
+    // // servo.deg(-90);
+    // // sleep_ms(1000);
+    // // servo.deg(90);
+    // // sleep_ms(1000);
+    // // servo.deg(0);
+    //
+    // Pin proxy(PROXY_PIN, GPIO_IN);
+    // Pin proxy(3, GPIO_IN);
+    //
+    // while (true) {
+    //     printf("%d\n", (int) proxy.value());
+    //     sleep_ms(100);
+    // }
 }
