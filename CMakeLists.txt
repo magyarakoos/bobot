@@ -21,6 +21,7 @@ pico_sdk_init()
 
 add_executable(${PROJECT_NAME}
     src/main.cpp
+    src/utils.cpp
     src/pin.cpp
     src/pwm.cpp
     src/onboard_led.cpp

@@ -1,13 +1,24 @@
 CompileFlags:
   CompilationDatabase: build/
   Add: 
+    - -std=c++17
+
+    # Specify the toolchain being used
     - --target=arm-none-eabi
+
+    # C headers
     - -isystem
     - /usr/lib/gcc/arm-none-eabi/14.2.0/include
     - -isystem
     - /usr/lib/gcc/arm-none-eabi/14.2.0/include-fixed
     - -isystem
     - /usr/arm-none-eabi/include
+
+    # C++ STL headers
+    - -isystem
+    - /usr/arm-none-eabi/include/c++/14.2.0
+    - -isystem
+    - /usr/arm-none-eabi/include/c++/14.2.0/arm-none-eabi
 
 
 Diagnostics:
