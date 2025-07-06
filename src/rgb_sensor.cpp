@@ -26,13 +26,13 @@ void RgbSensor::write8(uint8_t reg, uint8_t value) {
 uint8_t RgbSensor::read8(uint8_t reg) {
     uint8_t buf[1] = { 0 };
     i2c.read(address, CMD_BIT | reg, buf, 1);
-    return buf[1];
+    return buf[0];
 }
 
 void RgbSensor::write_bits(uint8_t reg, uint8_t value, uint8_t mask) {
     uint8_t old = read8(reg);
     uint8_t old_masked = old & ~mask;
-    uint8_t new_value = old_masked | value & mask;
+    uint8_t new_value = old_masked | (value & mask);
 
     write8(reg, new_value);
 }
@@ -45,6 +45,11 @@ std::array<uint16_t, 4> RgbSensor::get_data() {
     memcpy(values.data(), color_bytes, 4 * 2);
 
     return values;
+}
+
+Color RgbSensor::measure() {
+    auto [c, r, g, b] = get_data();
+    return { c, r, g, b };
 }
 
 void RgbSensor::set_integration_time(uint integration_time) {

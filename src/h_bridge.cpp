@@ -30,8 +30,8 @@ void HBridge::drive_raw(float l, float r) {
     l1.duty(abs(l) * (l > 0));
     l2.duty(abs(l) * (l < 0));
 
-    r1.duty(abs(r) * (r > 0));
-    r2.duty(abs(r) * (r < 0));
+    r1.duty(abs(r) * (r < 0));
+    r2.duty(abs(r) * (r > 0));
 }
 
 void HBridge::drive(float l, float r) {

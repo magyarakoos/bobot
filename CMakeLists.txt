@@ -21,18 +21,17 @@ pico_sdk_init()
 
 add_executable(${PROJECT_NAME}
     src/main.cpp
-    src/utils.cpp
     src/pin.cpp
     src/pwm.cpp
     src/onboard_led.cpp
     src/h_bridge.cpp
-    # src/bobot.cpp
+    src/bobot.cpp
     src/ultra_sensor.cpp
     src/servo.cpp
+    src/rgb_sensor.cpp
+    src/i2c.cpp
     # src/pid.cpp
     # src/encoder.cpp
-    # src/rgb_sensor.cpp
-    # src/i2c.cpp
 )
 
 # needed for serial USB communication

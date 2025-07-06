@@ -1,20 +1,21 @@
 #include "bobot.h"
+#include "config.h"
 
 namespace Bobot {
 
 PWM buzzer(BUZZER_PIN);
-HBridge hb(HB_L1_PIN, HB_L2_PIN, HB_L_PWM, HB_R1_PIN, HB_R2_PIN, HB_R_PWM, HB_PWM_FREQ);
 OnboardLed led;
-Pin button(BUTTON_PIN, GPIO_IN, true);
+HBridge hb(HB_L1_PIN, HB_L2_PIN, HB_R1_PIN, HB_R2_PIN, HB_EEP_PIN, HB_ULT_PIN, HB_PWM_FREQ);
+// Pin button(BUTTON_PIN, GPIO_IN, true);
 UltraSensor ultra(ULTRA_TRIG_PIN, ULTRA_ECHO_PIN);
-// RgbSensor rgb_sensor(RGB_SENSOR_SDA_PIN,
-//                      RGB_SENSOR_SCL_PIN,
-//                      RGB_SENSOR_CHAN,
-//                      RGB_SENSOR_LED_PIN,
-//                      RGB_SENSOR_INTEGRATION_TIME,
-//                      RGB_SENSOR_GAIN);
+RgbSensor rgb_sensor(RGB_SENSOR_SDA_PIN,
+                     RGB_SENSOR_SCL_PIN,
+                     RGB_SENSOR_CHAN,
+                     RGB_SENSOR_LED_PIN,
+                     RGB_SENSOR_INTEGRATION_TIME,
+                     RGB_SENSOR_GAIN);
 Servo servo(SERVO_PIN, SERVO_MIN, SERVO_MID, SERVO_MAX);
-// Pin proxy(PROXY_PIN, GPIO_IN, true);
+Pin proxy(PROXY_PIN, GPIO_IN);
 
 struct repeating_timer ultra_trig_up_timer;
 struct repeating_timer ultra_trig_down_timer;
@@ -30,13 +31,13 @@ bool ultra_trig_down(__unused repeating_timer* t) {
     return true;
 }
 
-void pause_callback() {
-    uint64_t now = time_us_64();
-    if (now - last_pause_us >= BUTTON_DEBOUNCE_INTERVAL_US) {
-        last_pause_us = now;
-        toggle();
-    }
-}
+// void pause_callback() {
+//     uint64_t now = time_us_64();
+//     if (now - last_pause_us >= BUTTON_DEBOUNCE_INTERVAL_US) {
+//         last_pause_us = now;
+//         toggle();
+//     }
+// }
 
 void init() {
     stdio_init_all();
@@ -48,8 +49,7 @@ void init() {
     sleep_us(15);
     add_repeating_timer_ms(-60, &ultra_trig_down, NULL, &ultra_trig_down_timer);
 
-    add_irq(button.pin, true, &pause_callback);
-    // add_irq(proxy.pin, true, &pause_callback);
+    // add_irq(button.pin, true, &pause_callback);
 
     servo.deg(0);
     // rgb_sensor.led.value(0);
@@ -63,6 +63,7 @@ void enable() {
 
     hb.enable();
     buzzer.enable();
+    proxy.enable();
     ultra.enable();
 }
 
@@ -74,6 +75,7 @@ void disable() {
 
     hb.disable();
     buzzer.disable();
+    proxy.disable();
     ultra.disable();
 }
 
@@ -83,7 +85,7 @@ void toggle() {
 
 // the first row is for edge rise, the second row is for edge fall
 // the i-th function in each row is for the i-th gpio pin
-static GpioIrq irqs[2][32] = { 0 };
+static GpioIrq irqs[2][32];
 
 void add_irq(uint gpio, bool is_fall, GpioIrq callback) {
     irqs[is_fall][gpio] = callback;

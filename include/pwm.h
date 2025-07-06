@@ -20,7 +20,7 @@ class PWM {
     void calculate_values();
 
 public:
-    static const uint CLOCK_SPEED = 125e6; // CPU clock speed, 125 MHz
+    static const uint CLOCK_SPEED = 150e6; // CPU clock speed, 125 MHz
     // CPU clock divider, a higher value allowes much lower
     // frequencies to be set, but the precision slightly decreases at
     // higher frequencies
@@ -42,4 +42,3 @@ public:
     // of time the PWM signal is high within a single cycle
     void duty(float _duty_cycle);
 };
-

@@ -6,7 +6,7 @@
 class UltraSensor {
 
     // conversion constant for the speed of sound
-    static constexpr float METERS_PER_US = 0.0001715f;
+    static constexpr float METERS_PER_US = 0.000175f;
     // minimum range of the sensor
     static constexpr float MIN_DIST = 0.02f;
     // maximum range of the sensor

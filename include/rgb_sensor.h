@@ -5,6 +5,13 @@
 #include "i2c.h"
 #include "pin.h"
 
+struct Color {
+    uint16_t c;
+    uint16_t r;
+    uint16_t g;
+    uint16_t b;
+};
+
 class RgbSensor {
 
     static const uint8_t DEFAULT_ADDRESS = 0x29;
@@ -27,6 +34,8 @@ class RgbSensor {
 
     void write_bits(uint8_t reg, uint8_t value, uint8_t mask);
 
+    std::array<uint16_t, 4> get_data();
+
 public:
     RgbSensor(uint sda_pin,
               uint scl_pin,
@@ -38,7 +47,7 @@ public:
 
     Pin led;
 
-    std::array<uint16_t, 4> get_data();
+    Color measure();
 
     void set_integration_time(uint integration_time);
 

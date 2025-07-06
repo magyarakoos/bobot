@@ -11,6 +11,14 @@ Servo::Servo(uint pin, float _min, float _mid, float _max) : pwm(PWM(pin)) {
     pwm.freq(50);
 }
 
+void Servo::enable() {
+    pwm.enable();
+}
+
+void Servo::disable() {
+    pwm.disable();
+}
+
 void Servo::duty(float d) {
     d = 1 - clamp(d, 0.0f, 1.0f);
 

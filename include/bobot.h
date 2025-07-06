@@ -1,7 +1,6 @@
 #pragma once
 
 #include <functional>
-#include "config.h"
 #include "h_bridge.h"
 #include "onboard_led.h"
 #include "pin.h"
@@ -17,7 +16,7 @@ namespace Bobot {
 
 // private bobot state variables
 static volatile bool bobot_enabled = true;
-static volatile uint64_t last_pause_us = 0;
+// static volatile uint64_t last_pause_us = 0;
 
 // peripherals exposed to the user
 extern Pin button;
@@ -27,7 +26,7 @@ extern HBridge hb;
 extern OnboardLed led;
 extern Servo servo;
 extern Pin proxy;
-// extern RgbSensor rgb_sensor;
+extern RgbSensor rgb_sensor;
 
 using GpioIrq = std::function<void()>;
 
