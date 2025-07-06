@@ -4,8 +4,8 @@
 
 const uint BUZZER_PIN = 2;
 
-// const uint BUTTON_PIN = 0;
-// const uint BUTTON_DEBOUNCE_INTERVAL_US = 5e5;
+const uint BUTTON_PIN = 0;
+const uint BUTTON_DEBOUNCE_INTERVAL_MS = 500;
 
 const uint ULTRA_TRIG_PIN = 20;
 const uint ULTRA_ECHO_PIN = 19;

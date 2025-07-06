@@ -1,4 +1,5 @@
 #include "bobot.h"
+#include <cstdio>
 #include "config.h"
 
 namespace Bobot {
@@ -6,7 +7,7 @@ namespace Bobot {
 PWM buzzer(BUZZER_PIN);
 OnboardLed led;
 HBridge hb(HB_L1_PIN, HB_L2_PIN, HB_R1_PIN, HB_R2_PIN, HB_EEP_PIN, HB_ULT_PIN, HB_PWM_FREQ);
-// Pin button(BUTTON_PIN, GPIO_IN, true);
+Pin button(BUTTON_PIN, GPIO_IN, true);
 UltraSensor ultra(ULTRA_TRIG_PIN, ULTRA_ECHO_PIN);
 RgbSensor rgb_sensor(RGB_SENSOR_SDA_PIN,
                      RGB_SENSOR_SCL_PIN,
@@ -31,13 +32,13 @@ bool ultra_trig_down(__unused repeating_timer* t) {
     return true;
 }
 
-// void pause_callback() {
-//     uint64_t now = time_us_64();
-//     if (now - last_pause_us >= BUTTON_DEBOUNCE_INTERVAL_US) {
-//         last_pause_us = now;
-//         toggle();
-//     }
-// }
+void pause_callback() {
+    uint64_t now = time_us_64();
+    if (now - last_pause_us >= BUTTON_DEBOUNCE_INTERVAL_MS * 1000) {
+        last_pause_us = now;
+        toggle();
+    }
+}
 
 void init() {
     stdio_init_all();
@@ -49,10 +50,22 @@ void init() {
     sleep_us(15);
     add_repeating_timer_ms(-60, &ultra_trig_down, NULL, &ultra_trig_down_timer);
 
-    // add_irq(button.pin, true, &pause_callback);
+    add_irq(button.pin, true, pause_callback);
+
+    // add_irq(proxy.pin, true, [&]() {
+    //     print("Proxy callback fall %d\n", (int) (time_us_64() / 1000));
+    //     on_ground = true;
+    //     hb.enable();
+    // });
+    // add_irq(proxy.pin, false, [&]() {
+    //     print("Proxy callback rise %d\n", (int) (time_us_64() / 1000));
+    //     on_ground = false;
+    //     hb.disable();
+    // });
 
     servo.deg(0);
-    // rgb_sensor.led.value(0);
+    rgb_sensor.led.value(0);
+    led.on();
 }
 
 void enable() {
@@ -62,9 +75,15 @@ void enable() {
     bobot_enabled = true;
 
     hb.enable();
+    // if (on_ground) {
+    //     hb.enable();
+    // }
     buzzer.enable();
     proxy.enable();
     ultra.enable();
+    servo.enable();
+
+    led.on();
 }
 
 void disable() {
@@ -77,6 +96,9 @@ void disable() {
     buzzer.disable();
     proxy.disable();
     ultra.disable();
+    servo.disable();
+
+    led.off();
 }
 
 void toggle() {
@@ -97,9 +119,26 @@ void add_irq(uint gpio, bool is_fall, GpioIrq callback) {
 void gpio_irq(uint gpio, uint32_t event_mask) {
 
     bool is_fall = event_mask & GPIO_IRQ_EDGE_FALL;
+    if (gpio != 19) {
+        print("gpio: %d, is fall: %d\n", gpio, (int) is_fall);
+    }
     GpioIrq irq = irqs[is_fall][gpio];
 
     if (irq)
         irq();
 }
+
+void print(const char* fmt, ...) {
+    // disable button interrupt
+    gpio_set_irq_enabled(button.pin, GPIO_IRQ_EDGE_FALL, false);
+
+    va_list args;
+    va_start(args, fmt);
+    vprintf(fmt, args);
+    va_end(args);
+
+    // re-enable button interrupt
+    gpio_set_irq_enabled(button.pin, GPIO_IRQ_EDGE_FALL, true);
+}
+
 } // namespace Bobot

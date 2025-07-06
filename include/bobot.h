@@ -16,7 +16,8 @@ namespace Bobot {
 
 // private bobot state variables
 static volatile bool bobot_enabled = true;
-// static volatile uint64_t last_pause_us = 0;
+static volatile uint64_t last_pause_us = 0;
+// static volatile bool on_ground = true;
 
 // peripherals exposed to the user
 extern Pin button;
@@ -49,4 +50,7 @@ void add_irq(uint gpio, bool is_fall, GpioIrq callback);
 // an interrupt is triggered
 // all gpio IRQ logic is defined here
 static void gpio_irq(uint gpio, uint32_t event_mask);
+
+void print(const char* fmt, ...);
+
 } // namespace Bobot
