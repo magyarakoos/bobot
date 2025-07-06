@@ -1,14 +1,11 @@
 #pragma once
 
-#include <stdint.h>
+#include "config.h"
+#include "pico/stdlib.h"
 #include "pin.h"
-
-enum Channel : uint8_t { A = 0b01, B = 0b10 };
+#include "ring_buffer.h"
 
 class Encoder {
-private:
-    uint8_t chanState;
-
 public:
     Pin A;
     Pin B;
@@ -16,14 +13,15 @@ public:
     Encoder(uint _a, uint _b);
 
     const int TICKS_PER_REV = 360;
-    // const int STOPPING_TRESHOLD_US = 1e7 / TICKS_PER_REV;
+    const int SPEED_WINDOW_US = 1e5;
 
     volatile int n;
     volatile bool dir;
 
-    volatile uint64_t last_revolution, dt_sum;
+    RingBuffer<volatile uint64_t, ENC_BUFFER_SIZE> buffer;
 
-    float get_rps();
+    // gets the speed measured in ticks / `SPEED_WINDOW_US`
+    int get_speed();
 
     void callback_a_rise();
     void callback_b_rise();

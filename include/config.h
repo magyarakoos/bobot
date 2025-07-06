@@ -36,3 +36,4 @@ const uint ENC_LA = 6;
 const uint ENC_LB = 7;
 const uint ENC_RA = 8;
 const uint ENC_RB = 9;
+const uint ENC_BUFFER_SIZE = 256;

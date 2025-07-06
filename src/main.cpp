@@ -22,8 +22,8 @@ int main() {
 
     // Bobot::hb.drive(0.5, 0.5);
     while (true) {
-        Bobot::print("%d %.4f\n", Bobot::enc_left.n, Bobot::enc_left.get_rps());
-        sleep_ms(100);
+        Bobot::print("%d\n", Bobot::enc_left.get_speed());
+        sleep_ms(50);
         // if (rb.value()) {
         //     Bobot::print("ON\n");
         // } else {
