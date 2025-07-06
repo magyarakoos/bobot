@@ -20,9 +20,17 @@ void servo_test() {
 int main() {
     Bobot::init();
 
-    Bobot::hb.drive(0.5, 0.5);
+    // Bobot::hb.drive(0.5, 0.5);
     while (true) {
-        Bobot::print("%d\n", (int) Bobot::proxy.value());
+        Bobot::print("%d %.4f\n", Bobot::enc_left.n, Bobot::enc_left.get_rps());
         sleep_ms(100);
+        // if (rb.value()) {
+        //     Bobot::print("ON\n");
+        // } else {
+        //     Bobot::print("OFF\n");
+        // }
+        // sleep_ms(10);
+        // Bobot::print("%d\n", (int) Bobot::proxy.value());
+        // sleep_ms(100);
     }
 }

@@ -30,8 +30,8 @@ add_executable(${PROJECT_NAME}
     src/servo.cpp
     src/rgb_sensor.cpp
     src/i2c.cpp
+    src/encoder.cpp
     # src/pid.cpp
-    # src/encoder.cpp
 )
 
 # needed for serial USB communication

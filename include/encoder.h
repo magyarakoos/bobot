@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include "pin.h"
 
 enum Channel : uint8_t { A = 0b01, B = 0b10 };
 
@@ -9,10 +10,13 @@ private:
     uint8_t chanState;
 
 public:
-    Encoder();
+    Pin A;
+    Pin B;
+
+    Encoder(uint _a, uint _b);
 
     const int TICKS_PER_REV = 360;
-    const int STOPPING_TRESHOLD_US = 1e7 / TICKS_PER_REV;
+    // const int STOPPING_TRESHOLD_US = 1e7 / TICKS_PER_REV;
 
     volatile int n;
     volatile bool dir;
@@ -21,5 +25,7 @@ public:
 
     float get_rps();
 
-    static void callback(volatile Encoder& e, Channel chan);
+    void callback_a_rise();
+    void callback_b_rise();
+    void callback_b_fall();
 };

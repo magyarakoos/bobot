@@ -1,6 +1,7 @@
 #include "bobot.h"
 #include <cstdio>
 #include "config.h"
+#include "encoder.h"
 
 namespace Bobot {
 
@@ -17,6 +18,8 @@ RgbSensor rgb_sensor(RGB_SENSOR_SDA_PIN,
                      RGB_SENSOR_GAIN);
 Servo servo(SERVO_PIN, SERVO_MIN, SERVO_MID, SERVO_MAX);
 Pin proxy(PROXY_PIN, GPIO_IN);
+
+Encoder enc_left(ENC_LA, ENC_LB);
 
 struct repeating_timer ultra_trig_up_timer;
 struct repeating_timer ultra_trig_down_timer;
@@ -51,6 +54,10 @@ void init() {
     add_repeating_timer_ms(-60, &ultra_trig_down, NULL, &ultra_trig_down_timer);
 
     add_irq(button.pin, true, pause_callback);
+
+    add_irq(enc_left.A.pin, false, [&]() { enc_left.callback_a_rise(); });
+    add_irq(enc_left.B.pin, false, [&]() { enc_left.callback_b_rise(); });
+    add_irq(enc_left.B.pin, true, [&]() { enc_left.callback_b_fall(); });
 
     // add_irq(proxy.pin, true, [&]() {
     //     print("Proxy callback fall %d\n", (int) (time_us_64() / 1000));
@@ -119,9 +126,9 @@ void add_irq(uint gpio, bool is_fall, GpioIrq callback) {
 void gpio_irq(uint gpio, uint32_t event_mask) {
 
     bool is_fall = event_mask & GPIO_IRQ_EDGE_FALL;
-    if (gpio != 19) {
-        print("gpio: %d, is fall: %d\n", gpio, (int) is_fall);
-    }
+    // if (gpio != 19) {
+    //     print("gpio: %d, is fall: %d\n", gpio, (int) is_fall);
+    // }
     GpioIrq irq = irqs[is_fall][gpio];
 
     if (irq)

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <functional>
+#include "encoder.h"
 #include "h_bridge.h"
 #include "onboard_led.h"
 #include "pin.h"
@@ -28,6 +29,7 @@ extern OnboardLed led;
 extern Servo servo;
 extern Pin proxy;
 extern RgbSensor rgb_sensor;
+extern Encoder enc_left;
 
 using GpioIrq = std::function<void()>;
 
