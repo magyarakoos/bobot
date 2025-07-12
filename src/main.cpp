@@ -1,4 +1,5 @@
 #include "bobot.h"
+#include "pico/stdlib.h"
 
 void servo_test() {
     Bobot::init();
@@ -19,18 +20,24 @@ void servo_test() {
 
 int main() {
     Bobot::init();
-
-    // Bobot::hb.drive(0.5, 0.5);
+    Bobot::led.on();
+    // Bobot::hb.drive(1, 1);
     while (true) {
-        Bobot::print("%d\n", Bobot::enc_left.get_speed());
+        Bobot::print("%d\n", Bobot::proxy.value());
         sleep_ms(50);
-        // if (rb.value()) {
-        //     Bobot::print("ON\n");
-        // } else {
-        //     Bobot::print("OFF\n");
-        // }
-        // sleep_ms(10);
-        // Bobot::print("%d\n", (int) Bobot::proxy.value());
-        // sleep_ms(100);
+        // Bobot::print("%.4f %d\n", Bobot::enc_left.get_speed(), Bobot::enc_left.get_speed_tpw(),
+        //              Bobot::enc_left.get_speed_tpw());
+        // sleep_ms(200);
     }
 }
+
+// #include <stdio.h>
+// #include "pico/stdlib.h"
+//
+// int main() {
+//     stdio_init_all();
+//     while (true) {
+//         printf("Hello, World!\n");
+//         sleep_ms(100);
+//     }
+// }

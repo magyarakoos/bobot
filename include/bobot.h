@@ -16,9 +16,8 @@
 namespace Bobot {
 
 // private bobot state variables
-static volatile bool bobot_enabled = true;
+static volatile bool bobot_enabled = false;
 static volatile uint64_t last_pause_us = 0;
-// static volatile bool on_ground = true;
 
 // peripherals exposed to the user
 extern Pin button;
@@ -30,6 +29,7 @@ extern Servo servo;
 extern Pin proxy;
 extern RgbSensor rgb_sensor;
 extern Encoder enc_left;
+extern Encoder enc_right;
 
 using GpioIrq = std::function<void()>;
 

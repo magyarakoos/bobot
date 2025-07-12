@@ -5,7 +5,7 @@
 const uint BUZZER_PIN = 2;
 
 const uint BUTTON_PIN = 0;
-const uint BUTTON_DEBOUNCE_INTERVAL_MS = 500;
+const uint BUTTON_DEBOUNCE_DELAY_MS = 500;
 
 const uint ULTRA_TRIG_PIN = 20;
 const uint ULTRA_ECHO_PIN = 19;
@@ -36,4 +36,6 @@ const uint ENC_LA = 6;
 const uint ENC_LB = 7;
 const uint ENC_RA = 8;
 const uint ENC_RB = 9;
-const uint ENC_BUFFER_SIZE = 256;
+const uint ENC_BUFFER_SIZE = 1024;
+
+const uint WHEEL_DIAMETER_MM = 43;

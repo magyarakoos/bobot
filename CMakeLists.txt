@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.13)
 
-set(PICO_BOARD pico2_w CACHE STRING "Board type")
+set(PICO_BOARD pico2_w)
 set(PICO_SDK_PATH $ENV{PICO_SDK_PATH})
 set(PROJECT_NAME "bobot")
 
@@ -31,7 +31,7 @@ add_executable(${PROJECT_NAME}
     src/rgb_sensor.cpp
     src/i2c.cpp
     src/encoder.cpp
-    # src/pid.cpp
+    src/pid.cpp
 )
 
 # needed for serial USB communication

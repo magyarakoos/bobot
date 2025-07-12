@@ -7,6 +7,9 @@
 
 class Encoder {
 public:
+    // gets the speed measured in ticks / `SPEED_WINDOW_US`
+    int get_speed_tpw();
+
     Pin A;
     Pin B;
 
@@ -20,10 +23,8 @@ public:
 
     RingBuffer<volatile uint64_t, ENC_BUFFER_SIZE> buffer;
 
-    // gets the speed measured in ticks / `SPEED_WINDOW_US`
-    int get_speed();
+    // gets the speed measured in m/s
+    float get_speed();
 
     void callback_a_rise();
-    void callback_b_rise();
-    void callback_b_fall();
 };

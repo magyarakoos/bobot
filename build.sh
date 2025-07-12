@@ -2,18 +2,8 @@
 
 set -e
 
-if [ ! -d "build" ]; then
-    mkdir build
-fi
+cmake . -B build
+cmake --build build
 
-cd build
-
-cmake ..
-
-make
-
-picotool load -f bobot.uf2
-
-# note: this is usually redundant, but occasionally
-# the device wouldn't reboot on its own
-# picotool reboot
+sudo picotool load -F build/bobot.uf2
+sudo picotool reboot
