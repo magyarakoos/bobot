@@ -1,14 +1,14 @@
 #include "bobot.h"
-#include <hardware/gpio.h>
+#include <pico/cyw43_arch.h>
 #include <cstdio>
 #include "config.h"
 #include "encoder.h"
+#include "motor.h"
 
 namespace Bobot {
 
 PWM buzzer(BUZZER_PIN);
 OnboardLed led;
-HBridge hb(HB_L1_PIN, HB_L2_PIN, HB_R1_PIN, HB_R2_PIN, HB_EEP_PIN, HB_ULT_PIN, HB_PWM_FREQ);
 Pin button(BUTTON_PIN, GPIO_IN, true);
 UltraSensor ultra(ULTRA_TRIG_PIN, ULTRA_ECHO_PIN);
 RgbSensor rgb_sensor(RGB_SENSOR_SDA_PIN,
@@ -19,56 +19,70 @@ RgbSensor rgb_sensor(RGB_SENSOR_SDA_PIN,
                      RGB_SENSOR_GAIN);
 Servo servo(SERVO_PIN, SERVO_MIN, SERVO_MID, SERVO_MAX);
 Pin proxy(PROXY_PIN, GPIO_IN);
-Encoder enc_left(ENC_LA, ENC_LB);
-Encoder enc_right(ENC_RA, ENC_RB);
+Motor motor(HB_L1_PIN,
+            HB_L2_PIN,
+            HB_R1_PIN,
+            HB_R2_PIN,
+            HB_EEP_PIN,
+            HB_ULT_PIN,
+            HB_PWM_FREQ,
+            ENC_LA,
+            ENC_LB,
+            ENC_RA,
+            ENC_RB,
+            0.0001f,
+            0.00001f,
+            0,
+            0,
+            0);
+// 0.00000001f,
+// 0.04f,
+// -0.00001f,
+// 0.00001f);
 
 // the first row is for edge rise, the second row is for edge fall
 // the i-th function in each row is for the i-th gpio pin
 static GpioIrq irqs[2][32];
 
+void add_irq(uint gpio, bool is_fall, GpioIrq callback) {
+    irqs[is_fall][gpio] = callback;
+    gpio_set_irq_enabled(gpio, is_fall ? GPIO_IRQ_EDGE_FALL : GPIO_IRQ_EDGE_RISE, true);
+}
+
 void register_irqs() {
     gpio_set_irq_callback(&gpio_irq);
 
     // Ultra sensor
-    irqs[0][ultra.echo.pin] = []() { ultra.rise = time_us_64(); };
-    irqs[1][ultra.echo.pin] = []() { ultra.fall = time_us_64(); };
+    add_irq(ultra.echo.pin, false, []() { ultra.callback_echo_rise(); });
+    add_irq(ultra.echo.pin, true, []() { ultra.callback_echo_fall(); });
 
     // Pause button
-    irqs[1][button.pin] = []() {
+    add_irq(button.pin, true, []() {
+        if (!button.inited)
+            return;
+
         uint64_t now = time_us_64();
-        if (now - last_pause_us >= BUTTON_DEBOUNCE_DELAY_MS * 1000) {
+        if (now - last_pause_us >= BUTTON_DEBOUNCE_DELAY_US) {
             last_pause_us = now;
             toggle();
         }
-    };
+    });
 
-    // Encoder
-    irqs[0][enc_left.A.pin] = []() { enc_left.callback_a_rise(); };
-    irqs[0][enc_right.A.pin] = []() { enc_right.callback_a_rise(); };
-}
-
-void enable_irqs(bool enabled) {
-    for (int i = 0; i < 2; i++) {
-        for (int j = 0; j < 32; j++) {
-            if (irqs[i][j]) {
-                uint32_t mask = i ? GPIO_IRQ_EDGE_FALL : GPIO_IRQ_EDGE_RISE;
-                gpio_set_irq_enabled(j, mask, enabled);
-            }
-        }
-    }
+    // Motor
+    add_irq(motor.enc_left.A.pin, false, []() { motor.enc_left.callback_a_rise(); });
+    add_irq(motor.enc_right.A.pin, false, []() { motor.enc_right.callback_a_rise(); });
 }
 
 struct repeating_timer ultra_trig_up_timer;
 struct repeating_timer ultra_trig_down_timer;
+struct repeating_timer motor_interrupt_timer;
 
 void register_timers() {
-
     { // Ultra sensor
         add_repeating_timer_ms(
             -60,
             [](__unused repeating_timer* t) {
-                ultra.trig.value(1);
-                ultra.last_pulse = time_us_64();
+                ultra.timer_callback_trig_up();
                 return true;
             },
             NULL, &ultra_trig_up_timer);
@@ -78,19 +92,34 @@ void register_timers() {
         add_repeating_timer_ms(
             -60,
             [](__unused repeating_timer* t) {
-                ultra.trig.value(0);
+                ultra.timer_callback_trig_down();
                 return true;
             },
             NULL, &ultra_trig_down_timer);
+    }
+
+    { // Motor
+        add_repeating_timer_ms(
+            -5,
+            [](__unused repeating_timer* t) {
+                motor.timer_callback();
+                return true;
+            },
+            NULL, &motor_interrupt_timer);
     }
 }
 
 void init() {
     stdio_init_all();
+    cyw43_arch_init();
 
     register_irqs();
     register_timers();
 
+    // we never deinit button
+    button.init();
+
+    // all other devices can be toggled with the button
     enable();
 
     servo.deg(0);
@@ -103,13 +132,12 @@ void enable() {
 
     bobot_enabled = true;
 
-    enable_irqs(true);
-
-    hb.enable();
-    buzzer.enable();
-    proxy.enable();
-    ultra.enable();
-    servo.enable();
+    motor.init();
+    buzzer.init();
+    proxy.init();
+    ultra.init();
+    servo.init();
+    rgb_sensor.init();
     led.on();
 }
 
@@ -119,38 +147,32 @@ void disable() {
 
     bobot_enabled = false;
 
-    enable_irqs(false);
-
-    hb.disable();
-    buzzer.disable();
-    proxy.disable();
-    ultra.disable();
-    servo.disable();
+    motor.deinit();
+    buzzer.deinit();
+    proxy.deinit();
+    ultra.deinit();
+    servo.deinit();
+    rgb_sensor.deinit();
     led.off();
 }
 
 void toggle() {
-    (bobot_enabled ? disable : enable)();
+    if (bobot_enabled) {
+        disable();
+    } else {
+        enable();
+    }
 }
 
 void gpio_irq(uint gpio, uint32_t event_mask) {
     bool is_fall = event_mask & GPIO_IRQ_EDGE_FALL;
 
+    // printf("%d %d\n", gpio, (int) is_fall);
+
     GpioIrq irq = irqs[is_fall][gpio];
 
     if (irq)
         irq();
-}
-
-void print(const char* fmt, ...) {
-    enable_irqs(false);
-
-    va_list args;
-    va_start(args, fmt);
-    vprintf(fmt, args);
-    va_end(args);
-
-    enable_irqs(true);
 }
 
 } // namespace Bobot

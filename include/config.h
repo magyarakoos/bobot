@@ -5,10 +5,12 @@
 const uint BUZZER_PIN = 2;
 
 const uint BUTTON_PIN = 0;
-const uint BUTTON_DEBOUNCE_DELAY_MS = 500;
+const uint BUTTON_DEBOUNCE_DELAY_US = 5e5;
 
 const uint ULTRA_TRIG_PIN = 20;
 const uint ULTRA_ECHO_PIN = 19;
+const uint ULTRA_BUFFER_SIZE = 16;
+const uint ULTRA_BUFFER_TIME_WINDOW_US = 3e5;
 
 const uint HB_L1_PIN = 13;
 const uint HB_L2_PIN = 12;
@@ -17,6 +19,7 @@ const uint HB_R2_PIN = 10;
 const uint HB_EEP_PIN = 15;
 const uint HB_ULT_PIN = 14;
 const uint HB_PWM_FREQ = 2000;
+const float HB_STOPPING_TRESHOLD = 0.1;
 
 const uint SERVO_PIN = 16;
 const float SERVO_MIN = 0.032f;
@@ -37,5 +40,6 @@ const uint ENC_LB = 7;
 const uint ENC_RA = 8;
 const uint ENC_RB = 9;
 const uint ENC_BUFFER_SIZE = 1024;
+const uint ENC_BUFFER_TIME_WINDOW_US = 1e5;
 
 const uint WHEEL_DIAMETER_MM = 43;

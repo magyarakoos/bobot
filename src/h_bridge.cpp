@@ -1,53 +1,74 @@
 #include "h_bridge.h"
-#include "pico/stdlib.h"
 #include "utils.h"
 
-HBridge::HBridge(uint _l1, uint _l2, uint _r1, uint _r2, uint _eep, uint _ult, uint pwm_freq)
-    : l1(_l1), l2(_l2), r1(_r1), r2(_r2), eep(_eep), last_l_speed(0), last_r_speed(0), ult(_ult, GPIO_IN, true) {
+HBridge::HBridge(uint _l1, uint _l2, uint _r1, uint _r2, uint _eep, uint _ult, uint _pwm_freq)
+    : l1(_l1),
+      l2(_l2),
+      r1(_r1),
+      r2(_r2),
+      eep(_eep),
+      pwm_freq(_pwm_freq),
+      last_l(0),
+      last_r(0),
+      inited(false),
+      l_speed(0),
+      r_speed(0),
+      ult(_ult, GPIO_IN, true) {}
+
+void HBridge::init() {
+    if (inited)
+        return;
+
+    inited = true;
+
+    l1.init();
+    l2.init();
+    r1.init();
+    r2.init();
+    eep.init();
+    ult.init();
+
+    eep.value(1);
 
     l1.freq(pwm_freq);
     l2.freq(pwm_freq);
     r1.freq(pwm_freq);
     r2.freq(pwm_freq);
 
-    enable();
+    drive(last_l, last_r);
 }
 
-void HBridge::enable() {
-    eep.value(1);
-    drive(last_l_speed, last_r_speed);
-}
+void HBridge::deinit() {
+    if (!inited)
+        return;
 
-void HBridge::disable() {
-    last_l_speed = l_speed;
-    last_r_speed = r_speed;
+    inited = false;
+
+    last_l = l_speed;
+    last_r = r_speed;
+
+    l1.deinit();
+    l2.deinit();
+    r1.deinit();
+    r2.deinit();
+    eep.deinit();
+    ult.deinit();
+
     drive(0, 0);
-    eep.value(0);
 }
 
-void HBridge::drive_raw(float l, float r) {
+void HBridge::drive(float l, float r) {
+    if (!inited)
+        return;
+
+    l = clamp(l, -1.0f, 1.0f);
+    r = clamp(r, -1.0f, 1.0f);
 
     l1.duty(abs(l) * (l > 0));
     l2.duty(abs(l) * (l < 0));
 
     r1.duty(abs(r) * (r < 0));
     r2.duty(abs(r) * (r > 0));
-}
-
-void HBridge::drive(float l, float r) {
-
-    l = clamp(l, -1.0f, 1.0f);
-    r = clamp(r, -1.0f, 1.0f);
-
-    int step_count = max(abs(l - l_speed), abs(r - r_speed)) / STEP_SIZE;
-    for (int i = 0; i <= step_count; i++) {
-        float t = (float) i / step_count;
-
-        drive_raw(l * t + l_speed * (1.0f - t), r * t + r_speed * (1.0f - t));
-
-        for (volatile int j = 0; j < DELAY_CYCLES; j++)
-            ;
-    }
 
     l_speed = l;
     r_speed = r;

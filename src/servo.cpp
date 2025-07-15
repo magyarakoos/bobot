@@ -3,23 +3,33 @@
 
 #define M_PI 3.1415926535
 
-Servo::Servo(uint pin, float _min, float _mid, float _max) : pwm(PWM(pin)) {
-    min = _min;
-    mid = _mid;
-    max = _max;
+Servo::Servo(uint pin, float _min, float _mid, float _max) : pwm(pin), min(_min), mid(_mid), max(_max), inited(false) {}
 
+void Servo::init() {
+    if (inited)
+        return;
+
+    inited = true;
+
+    pwm.init();
     pwm.freq(50);
+
+    deg(0);
 }
 
-void Servo::enable() {
-    pwm.enable();
-}
+void Servo::deinit() {
+    if (!inited)
+        return;
 
-void Servo::disable() {
-    pwm.disable();
+    inited = false;
+
+    pwm.deinit();
 }
 
 void Servo::duty(float d) {
+    if (!inited)
+        return;
+
     d = 1 - clamp(d, 0.0f, 1.0f);
 
     float duty;

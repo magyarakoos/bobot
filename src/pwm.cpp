@@ -3,6 +3,8 @@
 #include "utils.h"
 
 void PWM::calculate_values() {
+    if (!inited)
+        return;
 
     // set the clock divider
     pwm_set_clkdiv(slice_num, CLKDIV);
@@ -29,24 +31,32 @@ PWM::PWM(uint _pin)
       frequency(0),
       duty_cycle(0),
       slice_num(pwm_gpio_to_slice_num(_pin)),
-      channel_num(pwm_gpio_to_channel(_pin)) {
-    enable();
-}
+      channel_num(pwm_gpio_to_channel(_pin)),
+      inited(false) {}
 
-PWM::~PWM() {
-    disable();
-}
+void PWM::init() {
+    if (inited)
+        return;
 
-void PWM::enable() {
+    inited = true;
+
     gpio_set_function(pin, GPIO_FUNC_PWM);
     pwm_set_enabled(slice_num, true);
 }
 
-void PWM::disable() {
+void PWM::deinit() {
+    if (!inited)
+        return;
+
+    inited = false;
+
     gpio_deinit(pin);
 }
 
 void PWM::freq(uint _frequency) {
+    if (!inited)
+        return;
+
     frequency = _frequency;
 
     // The frequency cannot be lower than this value, otherwise wrap would overflow
@@ -58,6 +68,9 @@ void PWM::freq(uint _frequency) {
 }
 
 void PWM::duty(float _duty_cycle) {
+    if (!inited)
+        return;
+
     duty_cycle = _duty_cycle;
 
     // duty cycle should be between 0 and 1

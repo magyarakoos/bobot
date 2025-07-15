@@ -7,11 +7,13 @@ private:
     PWM pwm;
     float min, mid, max;
 
+    volatile bool inited;
+
 public:
     Servo(uint pin, float _min, float _mid, float _max);
 
-    void enable();
-    void disable();
+    void init();
+    void deinit();
 
     void duty(float d);
 

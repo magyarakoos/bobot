@@ -19,6 +19,8 @@ class PWM {
     // and uses them to set the PWM
     void calculate_values();
 
+    volatile bool inited;
+
 public:
     static const uint CLOCK_SPEED = 150e6; // CPU clock speed, 125 MHz
     // CPU clock divider, a higher value allowes much lower
@@ -30,10 +32,8 @@ public:
 
     PWM(uint _pin);
 
-    ~PWM();
-
-    void enable();
-    void disable();
+    void init();
+    void deinit();
 
     // sets the number of PWM cycles per second
     void freq(uint _frequency);

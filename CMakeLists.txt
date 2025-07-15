@@ -32,6 +32,7 @@ add_executable(${PROJECT_NAME}
     src/i2c.cpp
     src/encoder.cpp
     src/pid.cpp
+    src/motor.cpp
 )
 
 # needed for serial USB communication

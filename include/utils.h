@@ -37,3 +37,12 @@ T max(const T& x, const T& y) {
         return x;
     }
 }
+
+template <typename T>
+T sign(const T& x) {
+    if (x > 0)
+        return 1;
+    if (x < 0)
+        return -1;
+    return 0;
+}

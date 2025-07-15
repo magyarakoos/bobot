@@ -28,6 +28,11 @@ class RgbSensor {
     uint8_t address;
     I2C i2c;
 
+    volatile bool inited;
+
+    uint integration_time;
+    uint gain;
+
     void write8(uint8_t reg, uint8_t value);
 
     uint8_t read8(uint8_t reg);
@@ -47,9 +52,12 @@ public:
 
     Pin led;
 
+    void init();
+    void deinit();
+
     Color measure();
 
-    void set_integration_time(uint integration_time);
+    void set_integration_time(uint _integration_time);
 
-    void set_gain(uint gain);
+    void set_gain(uint _gain);
 };

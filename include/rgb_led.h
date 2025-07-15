@@ -8,7 +8,15 @@ class RGBLed {
     PWM g;
     PWM b;
 
-    RGBLed(uint _r, uint _g, uint _b, uint freq);
+    uint freq;
+
+    volatile bool inited;
+
+public:
+    RGBLed(uint _r, uint _g, uint _b, uint _freq);
+
+    void init();
+    void deinit();
 
     void set_color(float _r, float _g, float _b);
 };

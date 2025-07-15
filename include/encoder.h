@@ -6,24 +6,28 @@
 #include "ring_buffer.h"
 
 class Encoder {
-public:
-    // gets the speed measured in ticks / `SPEED_WINDOW_US`
-    int get_speed_tpw();
+    volatile bool inited;
 
+public:
     Pin A;
     Pin B;
 
     Encoder(uint _a, uint _b);
 
-    const int TICKS_PER_REV = 360;
-    const int SPEED_WINDOW_US = 1e5;
+    const uint TICKS_PER_REV = 360;
 
     volatile int n;
     volatile bool dir;
 
     RingBuffer<volatile uint64_t, ENC_BUFFER_SIZE> buffer;
 
-    // gets the speed measured in m/s
+    void init();
+    void deinit();
+
+    // gets the speed measured in ticks / `ENC_SPEED_WINDOW_US`
+    int get_speed_tpw();
+
+    // gets the speed measured in cm/s
     float get_speed();
 
     void callback_a_rise();

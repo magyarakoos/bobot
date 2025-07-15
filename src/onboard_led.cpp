@@ -1,9 +1,7 @@
 #include "onboard_led.h"
 #include "pico/cyw43_arch.h"
 
-OnboardLed::OnboardLed() : led_pin(CYW43_WL_GPIO_LED_PIN) {
-    cyw43_arch_init();
-}
+OnboardLed::OnboardLed() : led_pin(CYW43_WL_GPIO_LED_PIN) {}
 
 void OnboardLed::on() {
     value = 1;

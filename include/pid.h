@@ -22,10 +22,13 @@ class PID {
     float I(float pv, int64_t dt);
     float D(float pv, int64_t dt);
 
-public:
+    // target value
     float sp;
 
-    PID(float _sp, float _K_p, float _K_i, float _K_d, float _min_integral, float _max_integral);
+public:
+    PID(float _K_p, float _K_i, float _K_d, float _min_integral, float _max_integral);
+
+    void set_sp(float _sp);
 
     float compute(float pv);
 };

@@ -13,14 +13,12 @@ class HBridge {
 
     Pin eep;
 
-    float last_l_speed;
-    float last_r_speed;
+    uint pwm_freq;
 
-    // sets the motor PWMs to a speed between -1 and 1
-    void drive_raw(float l, float r);
+    float last_l;
+    float last_r;
 
-    static constexpr float STEP_SIZE = 0.1;
-    static const uint DELAY_CYCLES = 10;
+    volatile bool inited;
 
 public:
     float l_speed;
@@ -30,10 +28,9 @@ public:
 
     HBridge(uint _l1, uint _l2, uint _r1, uint _r2, uint _eep, uint _ult, uint pwm_freq);
 
-    void enable();
-    void disable();
+    void init();
+    void deinit();
 
     // sets the motor PWMs to a speed between -1 and 1
-    // with a linear interpolation between the previous value and the next value
     void drive(float l, float r);
 };

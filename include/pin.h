@@ -9,18 +9,19 @@
 class Pin {
     bool out;
     bool _value;
+    bool pull_up;
 
 public:
+    volatile bool inited;
+
     uint pin;
 
     Pin(uint _pin, bool _out, bool _pull_up);
     Pin(uint _pin, bool _out);
     Pin(uint _pin);
 
-    ~Pin();
-
-    void enable();
-    void disable();
+    void init();
+    void deinit();
 
     // the behavior is dependant on the GPIO direction:
     // if it's  IN: returns the value of the pin

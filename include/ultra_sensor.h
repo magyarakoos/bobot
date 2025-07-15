@@ -1,6 +1,8 @@
 #pragma once
 
+#include "config.h"
 #include "pin.h"
+#include "ring_buffer.h"
 
 // Ultrasound sensor controller
 class UltraSensor {
@@ -14,9 +16,18 @@ class UltraSensor {
 
     volatile uint64_t last_dist;
 
-public:
-    volatile bool enabled;
+    volatile bool inited;
 
+    struct Datapoint {
+        uint64_t t;
+        float dist;
+    };
+
+    RingBuffer<Datapoint, ULTRA_BUFFER_SIZE> buffer;
+
+    float rolling_dist_sum;
+
+public:
     Pin trig;
     Pin echo;
 
@@ -26,8 +37,24 @@ public:
 
     UltraSensor(uint _trig, uint _echo);
 
-    void enable();
-    void disable();
+    void init();
+    void deinit();
 
+    // returns the currently measured distance
+    //
+    // NOTE: it is preferred to use `distance_smooth` instead for better accuracy
     float distance();
+
+    // returns the rolling average of the last few valid measurements
+    float distance_smooth();
+
+    // call this on echo edge rise
+    void callback_echo_rise();
+    // call this on echo edge fall
+    void callback_echo_fall();
+
+    // call this every 60ms
+    void timer_callback_trig_up();
+    // call this every 60ms as well, but with a 15us delayed start
+    void timer_callback_trig_down();
 };
