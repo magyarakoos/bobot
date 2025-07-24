@@ -65,7 +65,7 @@ void Encoder::callback_a_rise() {
     uint64_t now = time_us_64();
     buffer.push_back(now);
 
-    if (B.value()) {
+    if (B.get()) {
         dir = 1;
         n++;
     } else {

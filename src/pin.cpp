@@ -28,19 +28,28 @@ void Pin::deinit() {
     gpio_deinit(pin);
 }
 
-bool Pin::value(bool __value) {
+bool Pin::get() {
     if (!inited)
         return 0;
 
-    _value = __value;
     if (out) {
-        gpio_put(pin, _value);
-        return 0;
+        return _value;
     } else {
         return gpio_get(pin);
     }
 }
 
+void Pin::set(bool __value) {
+    if (!inited)
+        return;
+
+    _value = __value;
+
+    if (out) {
+        gpio_put(pin, _value);
+    }
+}
+
 void Pin::toggle() {
-    value(!_value);
+    set(!_value);
 }

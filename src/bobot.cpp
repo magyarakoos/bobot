@@ -123,7 +123,7 @@ void init() {
     enable();
 
     servo.deg(0);
-    rgb_sensor.led.value(0);
+    rgb_sensor.led.set(0);
 }
 
 void enable() {

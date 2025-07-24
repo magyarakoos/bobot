@@ -6,17 +6,17 @@ HBridge::HBridge(uint _l1, uint _l2, uint _r1, uint _r2, uint _eep, uint _ult, u
       l2(_l2),
       r1(_r1),
       r2(_r2),
-      eep(_eep),
       pwm_freq(_pwm_freq),
       last_l(0),
       last_r(0),
       inited(false),
       l_speed(0),
       r_speed(0),
+      eep(_eep),
       ult(_ult, GPIO_IN, true) {}
 
 void HBridge::init() {
-    if (inited)
+    if (inited && eep.get())
         return;
 
     inited = true;
@@ -28,14 +28,14 @@ void HBridge::init() {
     eep.init();
     ult.init();
 
-    eep.value(1);
-
     l1.freq(pwm_freq);
     l2.freq(pwm_freq);
     r1.freq(pwm_freq);
     r2.freq(pwm_freq);
 
     drive(last_l, last_r);
+
+    eep.set(1);
 }
 
 void HBridge::deinit() {
@@ -43,6 +43,8 @@ void HBridge::deinit() {
         return;
 
     inited = false;
+
+    drive(0, 0);
 
     last_l = l_speed;
     last_r = r_speed;
@@ -53,8 +55,6 @@ void HBridge::deinit() {
     r2.deinit();
     eep.deinit();
     ult.deinit();
-
-    drive(0, 0);
 }
 
 void HBridge::drive(float l, float r) {

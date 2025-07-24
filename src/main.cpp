@@ -1,24 +1,22 @@
-#include <cmath>
-#include <cstdio>
+#include <stdio.h>
 #include "bobot.h"
-#include "pico/stdlib.h"
 
-// void servo_test() {
-//     Bobot::init();
-//
-//     int pos = 0, dir = 1;
-//     while (true) {
-//         Bobot::servo.deg(pos);
-//         pos += dir;
-//         sleep_ms(5);
-//         Bobot::print("%d %d\n", pos, (int) dir);
-//         if (pos <= -90) {
-//             dir = 1;
-//         } else if (pos >= 90) {
-//             dir = -1;
-//         }
-//     }
-// }
+void servo_test() {
+    Bobot::init();
+
+    int pos = 0, dir = 1;
+    while (true) {
+        Bobot::servo.deg(pos);
+        pos += dir;
+        sleep_ms(5);
+        printf("%d %d\n", pos, (int) dir);
+        if (pos <= -90) {
+            dir = 1;
+        } else if (pos >= 90) {
+            dir = -1;
+        }
+    }
+}
 
 void pid_distancing() {
     Bobot::init();
@@ -55,7 +53,7 @@ void drive_test() {
 
 void rgb_sensor_test() {
     Bobot::init();
-    Bobot::rgb_sensor.led.value(1);
+    Bobot::rgb_sensor.led.set(1);
 
     while (true) {
         Color c = Bobot::rgb_sensor.measure();
@@ -64,4 +62,9 @@ void rgb_sensor_test() {
     }
 }
 
-int main() {}
+int main() {
+    Bobot::init();
+    Bobot::motor.drive(100, 100);
+    while (true) {
+    }
+}

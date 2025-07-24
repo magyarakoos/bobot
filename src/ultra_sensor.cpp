@@ -85,7 +85,7 @@ void UltraSensor::timer_callback_trig_up() {
     if (!inited)
         return;
 
-    trig.value(1);
+    trig.set(1);
     last_pulse = time_us_64();
 }
 
@@ -93,5 +93,5 @@ void UltraSensor::timer_callback_trig_down() {
     if (!inited)
         return;
 
-    trig.value(0);
+    trig.set(0);
 }

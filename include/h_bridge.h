@@ -11,8 +11,6 @@ class HBridge {
     PWM r1;
     PWM r2;
 
-    Pin eep;
-
     uint pwm_freq;
 
     float last_l;
@@ -24,6 +22,7 @@ public:
     float l_speed;
     float r_speed;
 
+    Pin eep;
     Pin ult;
 
     HBridge(uint _l1, uint _l2, uint _r1, uint _r2, uint _eep, uint _ult, uint pwm_freq);

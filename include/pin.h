@@ -23,10 +23,13 @@ public:
     void init();
     void deinit();
 
-    // the behavior is dependant on the GPIO direction:
-    // if it's  IN: returns the value of the pin
-    // if it's OUT: sets the value to the pin, returns 0
-    bool value(bool __value = 0);
+    // if this is an input pin, reads it and returns it
+    // if this is an output pin, returns the last set value (or 0 if unset)
+    bool get();
+
+    // if this is an input pin, this does nothing
+    // otherwise set the pin value
+    void set(bool __value);
 
     // toggles the pin value
     // if the GPIO direction is IN, it doesn't do anything

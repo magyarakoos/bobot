@@ -45,7 +45,11 @@ void Motor::deinit() {
 
     inited = false;
 
-    hb.deinit();
+    // we don't deinit the HBridge, only put it to sleep
+    // the interface is a bit misleading this way, might refactor later
+    // hb.deinit();
+    hb.eep.set(0);
+
     enc_left.deinit();
     enc_right.deinit();
 }
@@ -84,6 +88,6 @@ void Motor::timer_callback() {
         r_o = 0;
     }
 
-    // printf("%d %d %d\n", l_target, l_o ? l_speed : 0, r_o ? r_speed : 0);
+    printf("%d %d %d\n", l_target, l_o ? l_speed : 0, r_o ? r_speed : 0);
     hb.drive(l_o, r_o);
 }
