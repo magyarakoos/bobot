@@ -1,5 +1,7 @@
+#include <pico/cyw43_arch.h>
 #include <stdio.h>
 #include "bobot.h"
+#include "onboard_led.h"
 
 void servo_test() {
     Bobot::init();
@@ -63,9 +65,13 @@ void rgb_sensor_test() {
 }
 
 int main() {
-    rgb_sensor_test();
-    // Bobot::init();
-    // Bobot::motor.drive(300, 300);
-    // while (true) {
-    // }
+    stdio_init_all();
+    cyw43_arch_init();
+    OnboardLed led;
+    int i = 0;
+    while (true) {
+        led.toggle();
+        printf("Yoo %d\n", i++);
+        sleep_ms(500);
+    }
 }
