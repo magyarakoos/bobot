@@ -1,6 +1,5 @@
 #include "motor.h"
 #include <cstdio>
-#include "bobot.h"
 #include "utils.h"
 
 Motor::Motor(uint hb_l1,
@@ -88,6 +87,6 @@ void Motor::timer_callback() {
         r_o = 0;
     }
 
-    printf("%d %d %d\n", l_target, l_o ? l_speed : 0, r_o ? r_speed : 0);
+    // printf("%d %d %d\n", l_target, l_o ? l_speed : 0, r_o ? r_speed : 0);
     hb.drive(l_o, r_o);
 }

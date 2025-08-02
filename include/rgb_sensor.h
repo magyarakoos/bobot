@@ -1,6 +1,5 @@
 #pragma once
 
-#include <stdint.h>
 #include <array>
 #include "i2c.h"
 #include "pin.h"

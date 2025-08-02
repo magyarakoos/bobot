@@ -24,10 +24,12 @@ void RgbSensor::init() {
     i2c.init();
     led.init();
 
-    write_bits(REG_ENABLE, PON, PON);
-    sleep_ms(10);
+    sleep_ms(100);
+    write8(REG_ENABLE, PON);
+    sleep_ms(100);
     write_bits(REG_ENABLE, AEN, AEN);
 
+    sleep_ms(100);
     set_integration_time(integration_time);
     set_gain(gain);
 }
@@ -63,12 +65,8 @@ void RgbSensor::write_bits(uint8_t reg, uint8_t value, uint8_t mask) {
 }
 
 std::array<uint16_t, 4> RgbSensor::get_data() {
-    uint8_t color_bytes[4 * 2] = { 0 };
-    i2c.read(address, CMD_BIT | REG_CDATAL, color_bytes, 4 * 2);
-
     std::array<uint16_t, 4> values;
-    memcpy(values.data(), color_bytes, 4 * 2);
-
+    i2c.read(address, CMD_BIT | REG_CDATAL, (uint8_t*) values.data(), 4 * 2);
     return values;
 }
 

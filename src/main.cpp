@@ -57,14 +57,15 @@ void rgb_sensor_test() {
 
     while (true) {
         Color c = Bobot::rgb_sensor.measure();
-        printf("%d %d %d %d\n", c.c, c.r, c.g, c.b);
+        printf("%d %d %d %d %d\n", (int) time_us_64(), c.c, c.r, c.g, c.b);
         sleep_ms(100);
     }
 }
 
 int main() {
-    Bobot::init();
-    Bobot::motor.drive(100, 100);
-    while (true) {
-    }
+    rgb_sensor_test();
+    // Bobot::init();
+    // Bobot::motor.drive(300, 300);
+    // while (true) {
+    // }
 }

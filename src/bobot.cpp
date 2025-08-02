@@ -71,6 +71,9 @@ void register_irqs() {
     // Motor
     add_irq(motor.enc_left.A.pin, false, []() { motor.enc_left.callback_a_rise(); });
     add_irq(motor.enc_right.A.pin, false, []() { motor.enc_right.callback_a_rise(); });
+
+    // Proxy sensor
+    // add_irq(proxy.pin, false, []() { disable(); });
 }
 
 struct repeating_timer ultra_trig_up_timer;

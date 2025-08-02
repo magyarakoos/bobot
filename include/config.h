@@ -19,7 +19,6 @@ const uint HB_R2_PIN = 10;
 const uint HB_EEP_PIN = 15;
 const uint HB_ULT_PIN = 14;
 const uint HB_PWM_FREQ = 2000;
-const float HB_STOPPING_TRESHOLD = 0.1;
 
 const uint SERVO_PIN = 16;
 const float SERVO_MIN = 0.032f;
@@ -30,8 +29,8 @@ const uint RGB_SENSOR_SDA_PIN = 26;
 const uint RGB_SENSOR_SCL_PIN = 27;
 const uint RGB_SENSOR_CHAN = 1;
 const uint RGB_SENSOR_LED_PIN = 17;
-const uint RGB_SENSOR_INTEGRATION_TIME = 1;
-const uint RGB_SENSOR_GAIN = 1;
+const uint RGB_SENSOR_INTEGRATION_TIME = 40;
+const uint RGB_SENSOR_GAIN = 3;
 
 const uint PROXY_PIN = 3;
 
