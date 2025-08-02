@@ -1,7 +1,7 @@
 CompileFlags:
   CompilationDatabase: build/
   Add: 
-    - -std=c++17
+    - -std=c++23
 
     # Specify the toolchain being used
     - --target=arm-none-eabi
