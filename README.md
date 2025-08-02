@@ -1,11 +1,13 @@
 # Bobot firmware written in C++
 
-## Setup (WIP)
-- Download [pico-sdk](https://github.com/raspberrypi/pico-sdk)
-- Set the environment variable `PICO_SDK_PATH` to the location of the SDK
-- Plug in your **Bobot** in `BOOTSEL` mode
-- Run `build.sh`
+## Setup
+- download the toolchain:
+    - this can be done manually, but the simplest way is to download the [Pico](https://marketplace.visualstudio.com/items?itemName=raspberry-pi.raspberry-pi-pico) extension for VSCode and create a project, this handles everything automatically
+    - you can simply delete this project you had to create
+- plug in your **Bobot** in `BOOTSEL` mode
+- run `./build.sh`
 
 ## Serial USB
-- You can use `sudo screen <path>` to connect to the device and listen to stdout
-- Path is usually `/dev/ttyACM0`
+- you can use `sudo cat /dev/ttyACMX` to connect to the device and listen to stdout
+- path is usually `/dev/ttyACM0`
+- (you can use the VSCode Serial Monitor on Windows)
