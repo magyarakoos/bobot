@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include "bobot.h"
+#include "debug.h"
+#include "net.h"
 
 void servo_test() {
     Bobot::init();
@@ -63,5 +65,31 @@ void rgb_sensor_test() {
 }
 
 int main() {
-    drive_test();
+    stdio_init_all();
+
+    sleep_ms(5000);
+
+    if (!net_init()) {
+        while (true) {
+            puts("Network failed to init");
+            sleep_ms(1000);
+        }
+    }
+
+    if (!debug_connect_server()) {
+        while (true) {
+            puts("Network failed to init");
+            sleep_ms(1000);
+        }
+    }
+
+    volatile float x = 0;
+    debug_add_remote_var(x, -10, 10);
+
+    debug_send_remote_vars();
+
+    while (true) {
+        debug_printf("Hello, world! x:%f\n", x);
+        sleep_ms(1000);
+    }
 }

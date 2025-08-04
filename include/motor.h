@@ -41,7 +41,7 @@ public:
     void init();
     void deinit();
 
-    // Set motor speed in TODO: system of measurement
+    // Set motor target speed in RPM
     void drive(int l, int r);
 
     // This function should be called `MOTOR_PID_FREQ` times each second

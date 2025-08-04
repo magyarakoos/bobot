@@ -1,5 +1,9 @@
 #pragma once
 
+#include <stdint.h>
+
+#ifdef __cplusplus
+
 template <typename T>
 T clamp(const T& value, const T& min, const T& max) {
     if (value < min) {
@@ -46,3 +50,18 @@ T sign(const T& x) {
         return -1;
     return 0;
 }
+
+#endif
+
+typedef struct hsv_color {
+    float h, s, v;
+} hsv_color;
+
+hsv_color util_rgb_to_hsv(uint16_t r, uint16_t g, uint16_t b);
+
+// void util_rgb_rel(rgb_sensor_color_raw* raw);
+
+#define CLAMP(v, min, max) ((v) > (max) ? (max) : ((v) < (min) ? (min) : (v)))
+
+#define _UTIL_QUOTE(str) #str
+#define _UTIL_EXPAND_AND_QUOTE(str) _UTIL_QUOTE(str)

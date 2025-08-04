@@ -1,5 +1,19 @@
 cmake_minimum_required(VERSION 3.13)
 
+# VSCode extension support
+if(WIN32)
+    set(USERHOME $ENV{USERPROFILE})
+else()
+    set(USERHOME $ENV{HOME})
+endif()
+set(sdkVersion 2.2.0)
+set(toolchainVersion 14_2_Rel1)
+set(picotoolVersion 2.2.0)
+set(picoVscode ${USERHOME}/.pico-sdk/cmake/pico-vscode.cmake)
+if (EXISTS ${picoVscode})
+    include(${picoVscode})
+endif()
+
 set(PROJECT_NAME "bobot")
 set(PICO_BOARD pico2_w)
 set(PICO_SDK_PATH $ENV{PICO_SDK_PATH})
@@ -32,6 +46,10 @@ add_executable(${PROJECT_NAME}
     src/encoder.cpp
     src/pid.cpp
     src/motor.cpp
+
+    src/net.c
+    src/net_debug.c
+    src/debug.c
 )
 
 # needed for serial USB communication

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "config.h"
-#include "pico/stdlib.h"
 #include "pin.h"
 #include "ring_buffer.h"
 
