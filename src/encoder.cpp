@@ -28,7 +28,7 @@ void Encoder::deinit() {
     B.deinit();
 }
 
-int Encoder::get_speed_tpw() {
+float Encoder::get_speed() {
     if (!inited)
         return 0;
 
@@ -38,24 +38,19 @@ int Encoder::get_speed_tpw() {
         buffer.pop_front();
     }
 
-    return buffer.size() * (dir ? 1 : -1);
-}
+    // ticks per `TIME_WINDOW_US`
+    float speed_tpw = buffer.size() * dir;
 
-float Encoder::get_speed() {
-    // ticks / second (Hz)
-    float tps = get_speed_tpw() * (1e6 / ENC_BUFFER_TIME_WINDOW_US);
+    // ticks per second (Hz)
+    float speed_tps = speed_tpw * (1e6 / ENC_BUFFER_TIME_WINDOW_US);
 
-    // revolutions / second (Hz)
-    float rps = tps / TICKS_PER_REV;
+    // ticks per minute
+    float speed_tpm = speed_tps * 60;
 
-    // wheel perimeter (m)
-    const float wheel_perimeter_m = WHEEL_DIAMETER_MM * M_PI / 1000;
+    // revolutions per minute
+    float speed_rpm = (float) speed_tpm / TICKS_PER_REV;
 
-    // meters / second
-    float mps = rps * wheel_perimeter_m;
-
-    // centimeters / second
-    return mps * 100;
+    return speed_rpm;
 }
 
 void Encoder::callback_a_rise() {
@@ -65,11 +60,6 @@ void Encoder::callback_a_rise() {
     uint64_t now = time_us_64();
     buffer.push_back(now);
 
-    if (B.get()) {
-        dir = 1;
-        n++;
-    } else {
-        dir = 0;
-        n--;
-    }
+    dir = (B.get() ? 1 : -1);
+    n += dir;
 }

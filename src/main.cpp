@@ -1,7 +1,5 @@
-#include <pico/cyw43_arch.h>
 #include <stdio.h>
 #include "bobot.h"
-#include "onboard_led.h"
 
 void servo_test() {
     Bobot::init();
@@ -46,9 +44,9 @@ void pid_distancing() {
 void drive_test() {
     Bobot::init();
 
-    Bobot::motor.drive(-100, -100);
+    Bobot::motor.drive(100, 100);
     while (true) {
-        printf("%d %d\n", Bobot::motor.enc_left.get_speed_tpw(), Bobot::motor.enc_right.get_speed_tpw());
+        printf("%f %f\n", Bobot::motor.enc_left.get_speed(), Bobot::motor.enc_right.get_speed());
         sleep_ms(20);
     }
 }
@@ -65,13 +63,5 @@ void rgb_sensor_test() {
 }
 
 int main() {
-    stdio_init_all();
-    cyw43_arch_init();
-    OnboardLed led;
-    int i = 0;
-    while (true) {
-        led.toggle();
-        printf("Yoo %d\n", i++);
-        sleep_ms(500);
-    }
+    drive_test();
 }

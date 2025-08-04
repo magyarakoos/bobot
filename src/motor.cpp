@@ -68,12 +68,9 @@ void Motor::timer_callback() {
     if (!inited)
         return;
 
-    int l_speed = enc_left.get_speed_tpw();
-    int r_speed = enc_right.get_speed_tpw();
-
     float l_o;
     if (l_target != 0) {
-        l_o = hb.l_speed + pid_left.compute(l_speed);
+        l_o = hb.l_speed + pid_left.compute(enc_left.get_speed());
         l_o = max(0.1f, abs(l_o)) * sign(l_o);
     } else {
         l_o = 0;
@@ -81,7 +78,7 @@ void Motor::timer_callback() {
 
     float r_o;
     if (r_target != 0) {
-        r_o = hb.r_speed + pid_right.compute(r_speed);
+        r_o = hb.r_speed + pid_right.compute(enc_right.get_speed());
         r_o = max(0.1f, abs(r_o)) * sign(r_o);
     } else {
         r_o = 0;
