@@ -46,31 +46,32 @@ void net_poll(void) {
 }
 
 void __not_in_flash_func(_net_err_cb)(void* arg, err_t err) {
-    char* err_str;
+    LWIP_UNUSED_ARG(arg);
 
+    char* e;
     switch (err) {
-        case ERR_OK: err_str = "No error, everything OK"; break;
-        case ERR_MEM: err_str = "Out of memory error"; break;
-        case ERR_BUF: err_str = "Buffer error"; break;
-        case ERR_TIMEOUT: err_str = "Timeout"; break;
-        case ERR_RTE: err_str = "Routing problem"; break;
-        case ERR_INPROGRESS: err_str = "Operation in progress"; break;
-        case ERR_VAL: err_str = "Illegal value"; break;
-        case ERR_WOULDBLOCK: err_str = "Operation would block"; break;
-        case ERR_USE: err_str = "Address in use"; break;
-        case ERR_ALREADY: err_str = "Already connecting"; break;
-        case ERR_ISCONN: err_str = "Conn already established"; break;
-        case ERR_CONN: err_str = "Not connected"; break;
-        case ERR_IF: err_str = "Low-level netif error"; break;
-        case ERR_ABRT: err_str = "Connection aborted"; break;
-        case ERR_RST: err_str = "Connection reset"; break;
-        case ERR_CLSD: err_str = "Connection closed"; break;
-        case ERR_ARG: err_str = "Illegal argument"; break;
+        case ERR_OK: e = "No error, everything OK"; break;
+        case ERR_MEM: e = "Out of memory error"; break;
+        case ERR_BUF: e = "Buffer error"; break;
+        case ERR_TIMEOUT: e = "Timeout"; break;
+        case ERR_RTE: e = "Routing problem"; break;
+        case ERR_INPROGRESS: e = "Operation in progress"; break;
+        case ERR_VAL: e = "Illegal value"; break;
+        case ERR_WOULDBLOCK: e = "Operation would block"; break;
+        case ERR_USE: e = "Address in use"; break;
+        case ERR_ALREADY: e = "Already connecting"; break;
+        case ERR_ISCONN: e = "Conn already established"; break;
+        case ERR_CONN: e = "Not connected"; break;
+        case ERR_IF: e = "Low-level netif error"; break;
+        case ERR_ABRT: e = "Connection aborted"; break;
+        case ERR_RST: e = "Connection reset"; break;
+        case ERR_CLSD: e = "Connection closed"; break;
+        case ERR_ARG: e = "Illegal argument"; break;
 
-        default: err_str = "unknown error";
+        default: e = "unknown error";
     }
 
-    printf("[ERROR] lwip error: %s", err_str);
+    printf("[ERROR] lwip error: %s\n", e);
 }
 
 bool net_isinit(void) {
