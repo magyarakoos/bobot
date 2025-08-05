@@ -87,6 +87,6 @@ void Motor::timer_callback() {
         r_o = 0;
     }
 
-    printf("%f %f %f\n", l_target, l_o ? l_speed : 0, r_o ? r_speed : 0);
+    // printf("%f %f %f\n", l_target, l_o ? l_speed : 0, r_o ? r_speed : 0);
     hb.drive(l_o, r_o);
 }

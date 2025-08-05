@@ -88,13 +88,14 @@ template <IsDebugType T, IsDebugType TMin, IsDebugType TMax>
 constexpr debug_type _debug_add_remote_var_template(const volatile T& var, TMin min = {}, TMax max = {});
 
 template <typename T>
-concept IsDebugInt = std::is_same_v<T, uint8_t> || std::is_same_v<T, uint16_t> || std::is_same_v<T, uint32_t> || //
-                     std::is_same_v<T, int8_t> || std::is_same_v<T, int16_t> || std::is_same_v<T, int32_t>;
+concept IsDebugInt =
+    std::is_same_v<T, uint8_t> || std::is_same_v<T, uint16_t> || std::is_same_v<T, uint32_t> || //
+    std::is_same_v<T, int8_t> || std::is_same_v<T, int16_t> || std::is_same_v<T, int32_t> || std::is_same_v<T, float>;
 
 template <typename T>
-concept IsDebugNotInt = std::is_same_v<T, bool> || std::is_same_v<T, float> || std::is_same_v<T, hsv_color>;
+concept IsDebugNotInt = std::is_same_v<T, bool> || std::is_same_v<T, hsv_color>;
 
-template <IsDebugType T>
+template <typename T>
 constexpr size_t _DEBUG_EXP_ARGS(const volatile T& var);
 
 template <IsDebugInt T>

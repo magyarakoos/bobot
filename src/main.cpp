@@ -65,9 +65,7 @@ void rgb_sensor_test() {
 }
 
 int main() {
-    stdio_init_all();
-
-    sleep_ms(5000);
+    Bobot::init();
 
     if (!net_init()) {
         while (true) {
@@ -83,13 +81,15 @@ int main() {
         }
     }
 
-    volatile float x = 0;
-    debug_add_remote_var(x, -10, 10);
+    // volatile float x = 0;
+    // debug_add_remote_var(x, -10, 10);
 
     debug_send_remote_vars();
 
+    Bobot::motor.drive(50, 50);
+
     while (true) {
-        debug_printf("Hello, world! x:%f\n", x);
+        debug_printf("l:%6.2f r:%6.2f\n", Bobot::motor.enc_left.get_speed(), Bobot::motor.enc_right.get_speed());
         sleep_ms(1000);
     }
 }
