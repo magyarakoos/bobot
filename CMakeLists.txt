@@ -37,15 +37,8 @@ add_executable(${PROJECT_NAME}
     src/pin.cpp
     src/pwm.cpp
     src/onboard_led.cpp
-    src/h_bridge.cpp
     src/bobot.cpp
-    src/ultra_sensor.cpp
-    src/servo.cpp
-    src/rgb_sensor.cpp
     src/i2c.cpp
-    src/encoder.cpp
-    src/pid.cpp
-    src/motor.cpp
 
     src/net.c
     src/net_debug.c

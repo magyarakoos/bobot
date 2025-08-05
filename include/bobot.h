@@ -1,15 +1,7 @@
 #pragma once
 
 #include <functional>
-#include "encoder.h"
-#include "h_bridge.h"
-#include "motor.h"
 #include "onboard_led.h"
-#include "pin.h"
-#include "pwm.h"
-#include "rgb_sensor.h"
-#include "servo.h"
-#include "ultra_sensor.h"
 
 // wrapper for the peripheral drivers for Bobot
 namespace Bobot {
@@ -19,14 +11,7 @@ static volatile bool bobot_enabled = false;
 static volatile uint64_t last_pause_us = 0;
 
 // peripherals exposed to the user
-extern Pin button;
-extern UltraSensor ultra;
-extern PWM buzzer;
 extern OnboardLed led;
-extern Servo servo;
-extern Pin proxy;
-extern RgbSensor rgb_sensor;
-extern Motor motor;
 
 using GpioIrq = std::function<void()>;
 
