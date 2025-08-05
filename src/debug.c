@@ -63,7 +63,7 @@ static void _debug_clamp_var(_debug_var* var) {
         case DEBUG_BOOL:
             volatile bool* valb = var->ptr;
             DEBUG_DISABLE_IRQ {
-                *valb = !!*valb;
+                *valb = *valb ? 1 : 0;
             }
             break;
 
@@ -183,8 +183,10 @@ void debug_add_remote_var_fn(volatile void* ptr, const char* name, debug_type ty
             break;
 
         case DEBUG_FLOAT:
-            printf("float, value: %.2f, min: %.2f, max: %.2f\n", //
-                   *(volatile float*) ptr, type.float_range.min, type.float_range.max);
+            printf(
+                "float, value: %.2f, min: %.2f, max: %.2f\n", //
+                *(volatile float*) ptr, type.float_range.min, type.float_range.max
+            );
             break;
 
         case DEBUG_INT:
@@ -202,7 +204,8 @@ void debug_add_remote_var_fn(volatile void* ptr, const char* name, debug_type ty
 
             printf( // portable print of int64_t (defined in inttypes.h)
                 "int, value: %" PRId64 ", min: %" PRId64 ", max: %" PRId64 "\n", //
-                val, type.int_data.min, type.int_data.max);
+                val, type.int_data.min, type.int_data.max
+            );
 
             break;
     }
@@ -210,10 +213,10 @@ void debug_add_remote_var_fn(volatile void* ptr, const char* name, debug_type ty
     _debug_var_count++;
 }
 
-#define _WRITE_TO_BUFFER(buffer, counter_var, value)               \
-    do {                                                           \
-        memcpy((buffer) + (counter_var), &(value), sizeof(value)); \
-        (counter_var) += sizeof(value);                            \
+#define _WRITE_TO_BUFFER(buf, pos, val)             \
+    do {                                            \
+        memcpy((buf) + (pos), &(val), sizeof(val)); \
+        (pos) += sizeof(val);                       \
     } while (0)
 
 void debug_send_remote_vars(void) {
@@ -311,9 +314,11 @@ void debug_printf(const char* format, ...) {
     va_start(args, format);
 
     // !! offsetting because of the 0x01 !!
-    int wci = vsnprintf((char*) (_debug_send_buf + 1 + sizeof(uint16_t)), //
-                        sizeof(_debug_send_buf) - (1 + sizeof(uint16_t)), //
-                        format, args);
+    int wci = vsnprintf(
+        (char*) (_debug_send_buf + 1 + sizeof(uint16_t)), //
+        sizeof(_debug_send_buf) - (1 + sizeof(uint16_t)), //
+        format, args
+    );
 
     va_end(args);
 
@@ -354,7 +359,13 @@ static size_t _debug_get_var_wire_size(debug_type type) {
     }
 }
 
-int32_t debug_parse_val_recv(const uint8_t* buf, size_t buf_size) {
+#define _READ_FROM_BUF(buf, pos, var)               \
+    do {                                            \
+        memcpy(&(var), (buf) + (pos), sizeof(var)); \
+        (pos) += sizeof(var);                       \
+    } while (0)
+
+int32_t __not_in_flash_func(debug_parse_val_recv)(const uint8_t* buf, size_t buf_size) {
     static char name[_DEBUG_VAR_MAX_NAME];
 
     uint16_t bytes_read = 0;
@@ -363,8 +374,10 @@ int32_t debug_parse_val_recv(const uint8_t* buf, size_t buf_size) {
     if (buf_size - bytes_read < sizeof(uint16_t) + 2)
         return -1;
 
-    uint16_t name_len = *(uint16_t*) (buf + bytes_read);
-    bytes_read += sizeof(name_len);
+    // uint16_t name_len = *(uint16_t*) (buf + bytes_read);
+    // bytes_read += sizeof(name_len);
+    uint16_t name_len;
+    _READ_FROM_BUF(buf, bytes_read, name_len);
 
     if (name_len > _DEBUG_VAR_MAX_NAME)
         return -2;
@@ -389,8 +402,6 @@ int32_t debug_parse_val_recv(const uint8_t* buf, size_t buf_size) {
         return -2;
     }
 
-    printf("%." _UTIL_EXPAND_AND_QUOTE(_DEBUG_VAR_MAX_NAME) "s's size: %d \n", var->name, (int) sz);
-
     if (buf_size - bytes_read < sz) {
         printf("[ERROR] not enough space in read buf: %d\n", (int) (buf_size - bytes_read));
         return -1;
@@ -400,38 +411,47 @@ int32_t debug_parse_val_recv(const uint8_t* buf, size_t buf_size) {
 
     switch (var->type.ty) {
         case DEBUG_INT:
-            int64_t val = *(int64_t*) (buf + bytes_read);
-            switch (var->type.int_data.ty) {
-                case DEBUG_U8: *(volatile uint8_t*) var->ptr = (uint8_t) val; break;
-                case DEBUG_U16: *(volatile uint16_t*) var->ptr = (uint16_t) val; break;
-                case DEBUG_U32: *(volatile uint32_t*) var->ptr = (uint32_t) val; break;
+            int64_t vali; // = *(int64_t*) (buf + bytes_read);
+            _READ_FROM_BUF(buf, bytes_read, vali);
 
-                case DEBUG_I8: *(volatile int8_t*) var->ptr = (int8_t) val; break;
-                case DEBUG_I16: *(volatile int16_t*) var->ptr = (int16_t) val; break;
-                case DEBUG_I32: *(volatile int32_t*) var->ptr = (int32_t) val; break;
+            switch (var->type.int_data.ty) {
+                case DEBUG_U8: *(volatile uint8_t*) var->ptr = (uint8_t) vali; break;
+                case DEBUG_U16: *(volatile uint16_t*) var->ptr = (uint16_t) vali; break;
+                case DEBUG_U32: *(volatile uint32_t*) var->ptr = (uint32_t) vali; break;
+
+                case DEBUG_I8: *(volatile int8_t*) var->ptr = (int8_t) vali; break;
+                case DEBUG_I16: *(volatile int16_t*) var->ptr = (int16_t) vali; break;
+                case DEBUG_I32: *(volatile int32_t*) var->ptr = (int32_t) vali; break;
             }
-            printf("%" PRId64 "\n", val);
+            printf("%" PRId64 "\n", vali);
             break;
 
         case DEBUG_FLOAT:
-            *(volatile float*) var->ptr = *(float*) (buf + bytes_read);
+            float valf;
+            _READ_FROM_BUF(buf, bytes_read, valf);
+
+            *(volatile float*) var->ptr = valf; //*(float*) (buf + bytes_read);
             printf("%f\n", *(volatile float*) var->ptr);
             break;
 
         case DEBUG_BOOL:
-            *(volatile bool*) var->ptr = *(bool*) (buf + bytes_read);
+            bool valb;
+            _READ_FROM_BUF(buf, bytes_read, valb);
+
+            *(volatile bool*) var->ptr = valb; // *(bool*) (buf + bytes_read);
             printf("%s\n", (*(volatile bool*) var->ptr) ? "true" : "false");
             break;
 
         case DEBUG_COLOR:
-            hsv_color col_src = *(hsv_color*) (buf + bytes_read);
+            hsv_color valc; // = *(hsv_color*) (buf + bytes_read);
+            _READ_FROM_BUF(buf, bytes_read, valc);
 
             // more than 32 bits
             volatile hsv_color* col_dst = var->ptr;
             // DEBUG_DISABLE_IRQ {
-            col_dst->h = col_src.h;
-            col_dst->s = col_src.s;
-            col_dst->v = col_src.v;
+                col_dst->h = valc.h;
+                col_dst->s = valc.s;
+                col_dst->v = valc.v;
             // }
 
             hsv_color col_res = *col_dst;
@@ -439,7 +459,7 @@ int32_t debug_parse_val_recv(const uint8_t* buf, size_t buf_size) {
             break;
     }
 
-    bytes_read += sz;
+    // bytes_read += sz;
 
     return bytes_read;
 }
