@@ -16,13 +16,12 @@ endif()
 
 set(PROJECT_NAME "bobot")
 set(PICO_BOARD pico2_w)
-set(PICO_SDK_PATH $ENV{PICO_SDK_PATH})
 
 # needed for LSP support
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # include the SDK directly
-include(${PICO_SDK_PATH}/pico_sdk_init.cmake)
+include(pico_sdk_import.cmake)
 
 set(CMAKE_C_STANDARD 23)
 set(CMAKE_CXX_STANDARD 23)
