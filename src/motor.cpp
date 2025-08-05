@@ -53,7 +53,7 @@ void Motor::deinit() {
     enc_right.deinit();
 }
 
-void Motor::drive(int l, int r) {
+void Motor::drive(float l, float r) {
     if (!inited)
         return;
 
@@ -68,9 +68,12 @@ void Motor::timer_callback() {
     if (!inited)
         return;
 
+    float l_speed = enc_left.get_speed();
+    float r_speed = enc_right.get_speed();
+
     float l_o;
     if (l_target != 0) {
-        l_o = hb.l_speed + pid_left.compute(enc_left.get_speed());
+        l_o = hb.l_speed + pid_left.compute(l_speed);
         l_o = max(0.1f, abs(l_o)) * sign(l_o);
     } else {
         l_o = 0;
@@ -78,12 +81,12 @@ void Motor::timer_callback() {
 
     float r_o;
     if (r_target != 0) {
-        r_o = hb.r_speed + pid_right.compute(enc_right.get_speed());
+        r_o = hb.r_speed + pid_right.compute(r_speed);
         r_o = max(0.1f, abs(r_o)) * sign(r_o);
     } else {
         r_o = 0;
     }
 
-    // printf("%d %d %d\n", l_target, l_o ? l_speed : 0, r_o ? r_speed : 0);
+    printf("%f %f %f\n", l_target, l_o ? l_speed : 0, r_o ? r_speed : 0);
     hb.drive(l_o, r_o);
 }

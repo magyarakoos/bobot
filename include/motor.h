@@ -18,8 +18,8 @@ public:
     Encoder enc_right;
     PID pid_right;
 
-    int l_target;
-    int r_target;
+    float l_target;
+    float r_target;
 
     Motor(uint hb_l1,
           uint hb_l2,
@@ -42,7 +42,7 @@ public:
     void deinit();
 
     // Set motor target speed in RPM
-    void drive(int l, int r);
+    void drive(float l, float r);
 
     // This function should be called `MOTOR_PID_FREQ` times each second
     void timer_callback();
