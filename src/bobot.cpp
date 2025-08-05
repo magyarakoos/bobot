@@ -35,10 +35,7 @@ Motor motor(HB_L1_PIN,
             0,
             0,
             0);
-// 0.00000001f,
-// 0.04f,
-// -0.00001f,
-// 0.00001f);
+RGBLed rgb_led(RGB_LED_R_PIN, RGB_LED_G_PIN, RGB_LED_B_PIN, RGB_LED_PWM_FREQ);
 
 // the first row is for edge rise, the second row is for edge fall
 // the i-th function in each row is for the i-th gpio pin
@@ -141,6 +138,7 @@ void enable() {
     ultra.init();
     servo.init();
     rgb_sensor.init();
+    rgb_led.init();
     led.on();
 }
 
@@ -156,6 +154,7 @@ void disable() {
     ultra.deinit();
     servo.deinit();
     rgb_sensor.deinit();
+    rgb_led.deinit();
     led.off();
 }
 

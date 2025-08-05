@@ -1,12 +1,11 @@
 #pragma once
 
 #include <functional>
-#include "encoder.h"
-#include "h_bridge.h"
 #include "motor.h"
 #include "onboard_led.h"
 #include "pin.h"
 #include "pwm.h"
+#include "rgb_led.h"
 #include "rgb_sensor.h"
 #include "servo.h"
 #include "ultra_sensor.h"
@@ -27,6 +26,7 @@ extern Servo servo;
 extern Pin proxy;
 extern RgbSensor rgb_sensor;
 extern Motor motor;
+extern RGBLed rgb_led;
 
 using GpioIrq = std::function<void()>;
 

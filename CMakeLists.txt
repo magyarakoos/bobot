@@ -46,6 +46,8 @@ add_executable(${PROJECT_NAME}
     src/encoder.cpp
     src/pid.cpp
     src/motor.cpp
+    src/rgb_led.cpp
+    src/utils.cpp
 
     src/net.c
     src/net_debug.c
