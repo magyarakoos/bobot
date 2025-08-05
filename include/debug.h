@@ -69,21 +69,6 @@ int32_t debug_parse_val_recv(const uint8_t* buf, size_t buf_size);
 #define _ARG0(_0, ...) _0
 #define _ARG1(_0, _1, ...) _1
 
-#define _DEBUG_EXP_ARGS(var) \
-    _Generic((var),          \
-        uint8_t: 3,          \
-        uint16_t: 3,         \
-        uint32_t: 3,         \
-                             \
-        int8_t: 3,           \
-        int16_t: 3,          \
-        int32_t: 3,          \
-                             \
-        float: 3,            \
-                             \
-        bool: 1,             \
-        hsv_color: 1)
-
 #define _DEBUG_VAR_MAX_NAME 64
 
 #ifdef __cplusplus
@@ -100,75 +85,110 @@ concept IsDebugType = std::is_same_v<T, uint8_t> || std::is_same_v<T, uint16_t> 
                       std::is_same_v<T, bool> || std::is_same_v<T, float> || std::is_same_v<T, hsv_color>;
 
 template <IsDebugType T, IsDebugType TMin, IsDebugType TMax>
-debug_type _debug_add_remote_var_template(const volatile T& var, TMin min = {}, TMax max = {});
+constexpr debug_type _debug_add_remote_var_template(const volatile T& var, TMin min = {}, TMax max = {});
+
+template <typename T>
+concept IsDebugInt = std::is_same_v<T, uint8_t> || std::is_same_v<T, uint16_t> || std::is_same_v<T, uint32_t> || //
+                     std::is_same_v<T, int8_t> || std::is_same_v<T, int16_t> || std::is_same_v<T, int32_t>;
+
+template <typename T>
+concept IsDebugNotInt = std::is_same_v<T, bool> || std::is_same_v<T, float> || std::is_same_v<T, hsv_color>;
+
+template <IsDebugType T>
+constexpr size_t _DEBUG_EXP_ARGS(const volatile T& var);
+
+template <IsDebugInt T>
+constexpr size_t _DEBUG_EXP_ARGS(const volatile T& var) {
+    return 3;
+}
+
+template <IsDebugNotInt T>
+constexpr size_t _DEBUG_EXP_ARGS(const volatile T& var) {
+    return 1;
+}
 
 template <typename TMin, typename TMax>
-debug_type _debug_add_remote_var_template(const volatile uint8_t& var, TMin min, TMax max) {
+constexpr debug_type _debug_add_remote_var_template(const volatile uint8_t& var, TMin min, TMax max) {
     return { .ty = DEBUG_INT,
              .int_data = { .ty = debug_type::_debug_int_data::DEBUG_U8, .min = (uint8_t) min, .max = (uint8_t) max } };
 }
 
 template <typename TMin, typename TMax>
-debug_type _debug_add_remote_var_template(const volatile uint16_t& var, TMin min, TMax max) {
+constexpr debug_type _debug_add_remote_var_template(const volatile uint16_t& var, TMin min, TMax max) {
     return { .ty = DEBUG_INT,
              .int_data = {
                  .ty = debug_type::_debug_int_data::DEBUG_U16, .min = (uint16_t) min, .max = (uint16_t) max } };
 }
 
 template <typename TMin, typename TMax>
-debug_type _debug_add_remote_var_template(const volatile uint32_t& var, TMin min, TMax max) {
+constexpr debug_type _debug_add_remote_var_template(const volatile uint32_t& var, TMin min, TMax max) {
     return { .ty = DEBUG_INT,
              .int_data = {
                  .ty = debug_type::_debug_int_data::DEBUG_U32, .min = (uint32_t) min, .max = (uint32_t) max } };
 }
 
 template <typename TMin, typename TMax>
-debug_type _debug_add_remote_var_template(const volatile int8_t& var, TMin min, TMax max) {
+constexpr debug_type _debug_add_remote_var_template(const volatile int8_t& var, TMin min, TMax max) {
     return { .ty = DEBUG_INT,
              .int_data = { .ty = debug_type::_debug_int_data::DEBUG_I8, .min = (int8_t) min, .max = (int8_t) max } };
 }
 
 template <typename TMin, typename TMax>
-debug_type _debug_add_remote_var_template(const volatile int16_t& var, TMin min, TMax max) {
+constexpr debug_type _debug_add_remote_var_template(const volatile int16_t& var, TMin min, TMax max) {
     return { .ty = DEBUG_INT,
              .int_data = { .ty = debug_type::_debug_int_data::DEBUG_I16, .min = (int16_t) min, .max = (int16_t) max } };
 }
 
 template <typename TMin, typename TMax>
-debug_type _debug_add_remote_var_template(const volatile int32_t& var, TMin min, TMax max) {
+constexpr debug_type _debug_add_remote_var_template(const volatile int32_t& var, TMin min, TMax max) {
     return { .ty = DEBUG_INT,
              .int_data = { .ty = debug_type::_debug_int_data::DEBUG_I32, .min = (int32_t) min, .max = (int32_t) max } };
 }
 
 template <typename TMin, typename TMax>
-debug_type _debug_add_remote_var_template(const volatile float& var, TMin min, TMax max) {
+constexpr debug_type _debug_add_remote_var_template(const volatile float& var, TMin min, TMax max) {
     return { .ty = DEBUG_FLOAT, .float_range = { .min = (float) min, .max = (float) max } };
 }
 
 template <typename TMin, typename TMax>
-debug_type _debug_add_remote_var_template(const volatile bool& var, TMin min, TMax max) {
+constexpr debug_type _debug_add_remote_var_template(const volatile bool& var, TMin min, TMax max) {
     return { .ty = DEBUG_BOOL };
 }
 
 template <typename TMin, typename TMax>
-debug_type _debug_add_remote_var_template(const volatile hsv_color& var, TMin min, TMax max) {
+constexpr debug_type _debug_add_remote_var_template(const volatile hsv_color& var, TMin min, TMax max) {
     return { .ty = DEBUG_COLOR };
 }
 
-#define debug_add_remote_var(var, ...)                                                                                \
-    do {                                                                                                              \
-        /*static_assert(sizeof(#var) - 1 < _DEBUG_VAR_MAX_NAME,                                                       \
-                      "Debug variable name longer than maximum (" _UTIL_EXPAND_AND_QUOTE(_DEBUG_VAR_MAX_NAME) ")");   \
-        static_assert(!(_PP_NARG(0 __VA_OPT__(, __VA_ARGS__)) < _DEBUG_EXP_ARGS(var)),                                \
-                      "debug_add_remote_var expects min and max values for ints and floats");                         \
-        static_assert(                                                                                                \
-            !(_PP_NARG(0 __VA_OPT__(, __VA_ARGS__)) > _DEBUG_EXP_ARGS(var)),                                          \
-            "too many args for debug_add_remote_var, only the variable and min, max are needed (if int or float)");*/ \
-        debug_type ty = _debug_add_remote_var_template(var __VA_OPT__(, __VA_ARGS__));                                \
-        debug_add_remote_var_fn((volatile void*) &var, #var, ty);                                                     \
+#define debug_add_remote_var(var, ...)                                                                              \
+    do {                                                                                                            \
+        static_assert(sizeof(#var) - 1 < _DEBUG_VAR_MAX_NAME,                                                       \
+                      "Debug variable name longer than maximum (" _UTIL_EXPAND_AND_QUOTE(_DEBUG_VAR_MAX_NAME) ")"); \
+        static_assert(!(_PP_NARG(0 __VA_OPT__(, __VA_ARGS__)) < _DEBUG_EXP_ARGS(var)),                              \
+                      "debug_add_remote_var expects min and max values for ints and floats");                       \
+        static_assert(                                                                                              \
+            !(_PP_NARG(0 __VA_OPT__(, __VA_ARGS__)) > _DEBUG_EXP_ARGS(var)),                                        \
+            "too many args for debug_add_remote_var, only the variable and min, max are needed (if int or float)"); \
+        debug_type ty = _debug_add_remote_var_template(var __VA_OPT__(, __VA_ARGS__));                              \
+        debug_add_remote_var_fn((volatile void*) &var, #var, ty);                                                   \
     } while (0)
 
 #else
+
+#define _DEBUG_EXP_ARGS(var) \
+    _Generic((var),          \
+        uint8_t: 3,          \
+        uint16_t: 3,         \
+        uint32_t: 3,         \
+                             \
+        int8_t: 3,           \
+        int16_t: 3,          \
+        int32_t: 3,          \
+                             \
+        float: 3,            \
+                             \
+        bool: 1,             \
+        hsv_color: 1)
 
 // for ints and floats a min and a max value are needed
 #define debug_add_remote_var(var, ...)                                                                              \
