@@ -42,3 +42,8 @@ const uint ENC_BUFFER_SIZE = 1024;
 const uint ENC_BUFFER_TIME_WINDOW_US = 1e5;
 
 const uint WHEEL_DIAMETER_MM = 43;
+
+const uint RGB_LED_R_PIN = 21;
+const uint RGB_LED_G_PIN = 22;
+const uint RGB_LED_B_PIN = 18;
+const uint RGB_LED_PWM_FREQ = 2000;

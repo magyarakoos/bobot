@@ -57,7 +57,15 @@ typedef struct hsv_color {
     float h, s, v;
 } hsv_color;
 
-hsv_color util_rgb_to_hsv(uint16_t r, uint16_t g, uint16_t b);
+hsv_color rgb_to_hsv(uint16_t r, uint16_t g, uint16_t b);
+
+#ifdef __cplusplus
+
+#include <array>
+
+std::array<float, 3> hsv_to_rgb(hsv_color c);
+
+#endif
 
 // void util_rgb_rel(rgb_sensor_color_raw* raw);
 
