@@ -3,24 +3,6 @@
 #include "pico/stdlib.h"
 #include "utils.h"
 
-float PID::error(float pv) {
-    return sp - pv;
-}
-
-float PID::P(float pv) {
-    return K_p * error(pv);
-}
-
-float PID::I(float pv, float dt) {
-    integral += K_i * error(pv) * dt;
-    integral = clamp(integral, min_integral, max_integral);
-    return integral;
-}
-
-float PID::D(float pv, float dt) {
-    return K_d * ((error(pv) - last_error) / dt);
-}
-
 PID::PID(float _K_p, float _K_i, float _K_d, float _min_integral, float _max_integral)
     : K_p(_K_p),
       K_i(_K_i),
@@ -47,10 +29,19 @@ void PID::set_constants(float _K_p, float _K_i, float _K_d, float _min_integral,
 float PID::compute(float pv) {
     float now = time_us_64() * 1e-6, dt = now - last_compute_t;
 
-    float result = P(pv) + I(pv, dt) + D(pv, dt);
+    float err = sp - pv;
 
-    last_error = error(pv);
+    float p = K_p * err;
+
+    integral += K_i * err * dt;
+    integral = clamp(integral, min_integral, max_integral);
+
+    float i = integral;
+
+    float d = K_d * ((err - last_error) / dt);
+
+    last_error = err;
     last_compute_t = now;
 
-    return result;
+    return p + i + d;
 }

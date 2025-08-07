@@ -30,11 +30,11 @@ Motor motor(HB_L1_PIN,
             ENC_LB,
             ENC_RA,
             ENC_RB,
-            0.0001f,
-            0.00001f,
+            20,
+            30,
             0,
-            0,
-            0);
+            -70,
+            70);
 RGBLed rgb_led(RGB_LED_R_PIN, RGB_LED_G_PIN, RGB_LED_B_PIN, RGB_LED_PWM_FREQ);
 
 // the first row is for edge rise, the second row is for edge fall

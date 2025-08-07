@@ -12,15 +12,9 @@ class PID {
     float last_error;
     int64_t last_compute_t;
 
-    float error(float target);
-
     volatile float integral;
     volatile float min_integral;
     volatile float max_integral;
-
-    float P(float pv);
-    float I(float pv, float dt);
-    float D(float pv, float dt);
 
     // target value
     volatile float sp;
