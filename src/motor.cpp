@@ -1,6 +1,27 @@
 #include "motor.h"
 #include <cstdio>
-#include "utils.h"
+
+void FIRFilter_init(FIRFilter* f) {
+    for (int i = 0; i < FIRFILTER_TAP_NUM; ++i)
+        f->history[i] = 0;
+    f->last_index = 0;
+}
+
+void FIRFilter_put(FIRFilter* f, float input) {
+    f->history[f->last_index++] = input;
+    if (f->last_index == FIRFILTER_TAP_NUM)
+        f->last_index = 0;
+}
+
+float FIRFilter_get(FIRFilter* f) {
+    float acc = 0;
+    int index = f->last_index;
+    for (int i = 0; i < FIRFILTER_TAP_NUM; ++i) {
+        index = index != 0 ? index - 1 : FIRFILTER_TAP_NUM - 1;
+        acc += f->history[index] * filter_taps[i];
+    }
+    return acc;
+}
 
 Motor::Motor(uint hb_l1,
              uint hb_l2,
@@ -36,6 +57,8 @@ void Motor::init() {
     hb.init();
     enc_left.init();
     enc_right.init();
+    FIRFilter_init(&fl);
+    FIRFilter_init(&fr);
 }
 
 void Motor::deinit() {
@@ -57,36 +80,44 @@ void Motor::drive(float l, float r) {
     if (!inited)
         return;
 
-    l_target = abs(l) >= 20 ? l : 0;
-    r_target = abs(r) >= 20 ? r : 0;
+    l_target = l;
+    r_target = r;
+    // l_target = abs(l) >= 5 ? l : 0;
+    // r_target = abs(r) >= 5 ? r : 0;
 
-    pid_left.set_sp(l);
-    pid_right.set_sp(r);
+    pid_left.set_sp(l_target);
+    pid_right.set_sp(r_target);
 }
 
 void Motor::timer_callback() {
     if (!inited)
         return;
 
-    float l_speed = enc_left.get_speed();
-    float r_speed = enc_right.get_speed();
+    float l_speed = enc_left.get_speed() / 200.0f;
+    float r_speed = enc_right.get_speed() / 200.0f;
+
+    // FIRFilter_put(&fl, l_speed);
+    // float lf = FIRFilter_get(&fl);
+    // FIRFilter_put(&fr, r_speed);
+    // float rf = FIRFilter_get(&fr);
 
     float l_o;
     if (l_target != 0) {
-        l_o = hb.l_speed + pid_left.compute(l_speed);
-        l_o = max(0.1f, abs(l_o)) * sign(l_o);
+        l_o = pid_left.compute(l_speed);
+        // l_o = max(10.f, abs(l_o)) * sign(l_o);
     } else {
         l_o = 0;
     }
 
     float r_o;
     if (r_target != 0) {
-        r_o = hb.r_speed + pid_right.compute(r_speed);
-        r_o = max(0.1f, abs(r_o)) * sign(r_o);
+        r_o = pid_right.compute(r_speed);
+        // r_o = max(10.f, abs(r_o)) * sign(r_o);
     } else {
         r_o = 0;
     }
 
-    // printf("%f %f %f\n", l_target, l_o ? l_speed : 0, r_o ? r_speed : 0);
+    printf("%f %f => %f %f\n", l_speed, r_speed, l_o, r_o);
+
     hb.drive(l_o, r_o);
 }

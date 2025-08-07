@@ -61,6 +61,9 @@ void HBridge::drive(float l, float r) {
     if (!inited)
         return;
 
+    l *= 0.01f;
+    r *= 0.01f;
+
     l = clamp(l, -1.0f, 1.0f);
     r = clamp(r, -1.0f, 1.0f);
 

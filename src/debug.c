@@ -75,9 +75,6 @@ static void _debug_clamp_var(_debug_var* var) {
             if (!isfinite(fdata->max))
                 fdata->max = 0;
 
-            fdata->min = CLAMP(fdata->min, 0, UINT8_MAX);
-            fdata->max = CLAMP(fdata->max, fdata->min, UINT8_MAX);
-
             volatile float* valf = var->ptr;
             DEBUG_DISABLE_IRQ {
                 float tmpf = *valf;

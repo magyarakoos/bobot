@@ -13,12 +13,17 @@ public:
 
     Encoder(uint _a, uint _b);
 
-    const uint TICKS_PER_REV = 360;
+    // const uint TICKS_PER_REV = 360;
 
-    volatile int n;
-    volatile int dir;
+    // volatile int n;
+    // volatile int dir;
 
-    RingBuffer<volatile uint64_t, ENC_BUFFER_SIZE> buffer;
+    volatile int32_t n;
+    volatile int32_t elapsed;
+
+    volatile uint64_t last_irq;
+
+    // RingBuffer<volatile uint64_t, ENC_BUFFER_SIZE> buffer;
 
     void init();
     void deinit();
