@@ -117,7 +117,7 @@ void Motor::timer_callback() {
         r_o = 0;
     }
 
-    printf("%f %f => %f %f\n", l_speed, r_speed, l_o, r_o);
+    // printf("%f %f => %f %f\n", l_speed, r_speed, l_o, r_o);
 
     hb.drive(l_o, r_o);
 }
