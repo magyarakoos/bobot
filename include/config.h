@@ -2,7 +2,7 @@
 
 #include "pico/stdlib.h"
 
-const uint BUZZER_PIN = 2;
+const uint BUZZER_PIN = 4;
 
 const uint BUTTON_PIN = 0;
 const uint BUTTON_DEBOUNCE_DELAY_US = 5e5;
