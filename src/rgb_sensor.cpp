@@ -24,20 +24,20 @@ void RgbSensor::init() {
     i2c.init();
     led.init();
 
-    sleep_ms(100);
     write8(REG_ENABLE, PON);
-    sleep_ms(100);
+    sleep_ms(15);
     write_bits(REG_ENABLE, AEN, AEN);
 
-    sleep_ms(100);
     set_integration_time(integration_time);
     set_gain(gain);
 }
 
 void RgbSensor::deinit() {
-
     if (!inited)
         return;
+
+    // shut down
+    write_bits(REG_ENABLE, ~(PON | AEN), PON | AEN);
 
     inited = false;
 

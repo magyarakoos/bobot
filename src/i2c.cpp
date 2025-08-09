@@ -34,18 +34,16 @@ void I2C::read(uint8_t addr, uint8_t memaddr, uint8_t* buf, uint nbytes) {
     if (!inited)
         return;
 
-    const uint8_t membuf[1] = { memaddr };
-    i2c_write_burst_blocking(i2c_get_instance(i2c_index), addr, membuf, 1);
+    i2c_write_blocking(i2c_get_instance(i2c_index), addr, &memaddr, sizeof(memaddr), true);
 
-    i2c_read_burst_blocking(i2c_get_instance(i2c_index), addr, buf, nbytes);
+    i2c_read_blocking(i2c_get_instance(i2c_index), addr, buf, nbytes, false);
 }
 
 void I2C::write(uint8_t addr, uint8_t memaddr, const uint8_t* buf, uint8_t nbytes) {
     if (!inited)
         return;
 
-    const uint8_t membuf[1] = { memaddr };
-    i2c_write_burst_blocking(i2c_get_instance(i2c_index), addr, membuf, 1);
+    i2c_write_blocking(i2c_get_instance(i2c_index), addr, &memaddr, sizeof(memaddr), true);
 
-    i2c_write_burst_blocking(i2c_get_instance(i2c_index), addr, buf, nbytes);
+    i2c_write_blocking(i2c_get_instance(i2c_index), addr, buf, nbytes, false);
 }
