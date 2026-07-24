@@ -7,10 +7,9 @@ int main() {
 
     Bobot bobot;
 
-    bobot.sc.drive(300, 300);
-
     while (true) {
-        printf("%6.4f %6.4f %6.4f\n", bobot.sc.last_l_rpm, bobot.sc.last_r_rpm, bobot.ultra.dist());
+        auto [c, r, g, b] = bobot.rgb_sensor.measure();
+        printf("%d %d %d %d\n", c, r, g, b);
         sleep_ms(100);
     }
 }
