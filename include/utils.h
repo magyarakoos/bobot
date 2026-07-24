@@ -1,75 +1,38 @@
-#pragma once
-
-#include <stdint.h>
-
-#ifdef __cplusplus
+#include <cstdint>
 
 template <typename T>
-T clamp(const T& value, const T& min, const T& max) {
-    if (value < min) {
+T clamp(T x, T min, T max) {
+    if (x < min) {
         return min;
-    } else if (value > max) {
+    }
+    if (x > max) {
         return max;
-    } else {
-        return value;
     }
+    return x;
 }
 
-template <typename T>
-T abs(const T& x) {
-    if (x < 0) {
-        return -x;
-    } else {
-        return x;
-    }
-}
+class Pid {
+public:
+    float kp;
+    float ki;
+    float kd;
 
-template <typename T>
-T min(const T& x, const T& y) {
-    if (y < x) {
-        return y;
-    } else {
-        return x;
-    }
-}
+    float int_min;
+    float int_max;
 
-template <typename T>
-T max(const T& x, const T& y) {
-    if (y > x) {
-        return y;
-    } else {
-        return x;
-    }
-}
+    float sp;
 
-template <typename T>
-T sign(const T& x) {
-    if (x > 0)
-        return 1;
-    if (x < 0)
-        return -1;
-    return 0;
-}
+    Pid(float _kp, float _ki, float _kd, float _int_min, float _int_max, float _sp);
 
-#endif
+    float step(float pv, float dt);
 
-typedef struct hsv_color {
-    float h, s, v;
-} hsv_color;
+private:
+    float _int;
+    float _last_e;
+};
 
-hsv_color rgb_to_hsv(uint16_t r, uint16_t g, uint16_t b);
+struct rgb_color {
+    uint8_t r, g, b;
+};
 
-#ifdef __cplusplus
-
-#include <array>
-
-std::array<float, 3> hsv_to_rgb(hsv_color c);
-
-#endif
-
-// void util_rgb_rel(rgb_sensor_color_raw* raw);
-
-#define CLAMP(v, min, max) ((v) > (max) ? (max) : ((v) < (min) ? (min) : (v)))
-
-#define _UTIL_QUOTE(str) #str
-#define _UTIL_EXPAND_AND_QUOTE(str) _UTIL_QUOTE(str)
+rgb_color hsv_to_rgb(float h, float s, float v);

@@ -1,65 +1,66 @@
 #include "utils.h"
-#include <array>
-#include <cmath>
 
-hsv_color rgb_to_hsv(uint16_t rr, uint16_t gg, uint16_t bb) {
-    float r = (float) rr / 0xffff;
-    float g = (float) gg / 0xffff;
-    float b = (float) bb / 0xffff;
+Pid::Pid(float _kp, float _ki, float _kd, float _int_min, float _int_max, float _sp)
+    : kp(_kp), ki(_ki), kd(_kd), int_min(_int_min), int_max(_int_max), sp(_sp), _int(0.0), _last_e(0.0) {}
 
-    float mx = max(max(r, g), b);
-    float mn = min(min(r, g), b);
-    float delta = mx - mn;
+float Pid::step(float pv, float dt) {
+    float e = sp - pv;
 
-    hsv_color hsv = (hsv_color) {
-        .h = 0,
-        .s = mx == 0 ? 0 : (mx - mn) / mx,
-        .v = mx,
-    };
+    _int = clamp(_int + e * dt, int_min, int_max);
 
-    if (delta == 0)
-        return hsv;
+    float p = kp * e;
+    float i = ki * _int;
+    float d = kd * (e - _last_e) / dt;
 
-    if (r == mx) {
-        hsv.h = (g - b) / delta;
-    } else {
-        if (g == mx)
-            hsv.h = 2 + (b - r) / delta;
-        else
-            hsv.h = 4 + (r - g) / delta;
-    }
-
-    hsv.h *= 60;
-    if (hsv.h < 0)
-        hsv.h += 360;
-
-    return hsv;
+    _last_e = e;
+    return p + i + d;
 }
 
-#ifdef __cplusplus
+rgb_color hsv_to_rgb(float h, float s, float v) {
+    int i = h / 60.0f;
+    float f = (h / 60.0f) - (float) i;
 
-std::array<float, 3> hsv_to_rgb(hsv_color c) {
+    float p = v * (1.0f - s);
+    float q = v * (1.0f - s * f);
+    float t = v * (1.0f - s * (1.0f - f));
+
     float r, g, b;
-
-    float h = c.h / 360.0;
-    float s = c.s;
-    float v = c.v;
-
-    int i = floor(h * 6);
-    float f = h * 6 - i;
-    float p = v * (1 - s);
-    float q = v * (1 - f * s);
-    float t = v * (1 - (1 - f) * s);
-
     switch (i % 6) {
-        case 0: r = v, g = t, b = p; break;
-        case 1: r = q, g = v, b = p; break;
-        case 2: r = p, g = v, b = t; break;
-        case 3: r = p, g = q, b = v; break;
-        case 4: r = t, g = p, b = v; break;
-        case 5: r = v, g = p, b = q; break;
+        case 0:
+            r = v;
+            g = t;
+            b = p;
+            break;
+        case 1:
+            r = q;
+            g = v;
+            b = p;
+            break;
+        case 2:
+            r = p;
+            g = v;
+            b = t;
+            break;
+        case 3:
+            r = p;
+            g = q;
+            b = v;
+            break;
+        case 4:
+            r = t;
+            g = p;
+            b = v;
+            break;
+        case 5:
+            r = v;
+            g = p;
+            b = q;
+            break;
     }
 
-    return { r, g, b };
+    uint8_t r_byte = clamp(r, 0.0f, 1.0f) * 255 + 0.5f;
+    uint8_t g_byte = clamp(g, 0.0f, 1.0f) * 255 + 0.5f;
+    uint8_t b_byte = clamp(b, 0.0f, 1.0f) * 255 + 0.5f;
+
+    return { r_byte, g_byte, b_byte };
 }
-#endif

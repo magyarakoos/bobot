@@ -1,55 +1,31 @@
 #include "pin.h"
-#include "pico/stdlib.h"
 
-Pin::Pin(uint _pin, bool _out, bool _pull_up) : out(_out), _value(0), pull_up(_pull_up), inited(false), pin(_pin) {}
+#include "hardware/gpio.h"
 
-Pin::Pin(uint _pin, bool _out) : Pin(_pin, _out, false) {}
+Pin::Pin(uint gpio, Direction dir, Pull pull) : gpio_(gpio), dir_(dir) {
+    gpio_init(gpio_);
+    gpio_set_dir(gpio_, dir_ == Direction::Out ? GPIO_OUT : GPIO_IN);
 
-Pin::Pin(uint _pin) : Pin(_pin, GPIO_OUT) {}
-
-void Pin::init() {
-    if (inited)
-        return;
-
-    inited = true;
-
-    gpio_init(pin);
-    gpio_set_dir(pin, out);
-    if (pull_up)
-        gpio_pull_up(pin);
-}
-
-void Pin::deinit() {
-    if (!inited)
-        return;
-
-    inited = false;
-
-    gpio_deinit(pin);
-}
-
-bool Pin::get() {
-    if (!inited)
-        return 0;
-
-    if (out) {
-        return _value;
-    } else {
-        return gpio_get(pin);
+    switch (pull) {
+        case Pull::Up: gpio_pull_up(gpio_); break;
+        case Pull::Down: gpio_pull_down(gpio_); break;
+        case Pull::None:
+        default: gpio_disable_pulls(gpio_); break;
     }
 }
 
-void Pin::set(bool __value) {
-    if (!inited)
-        return;
-
-    _value = __value;
-
-    if (out) {
-        gpio_put(pin, _value);
-    }
+bool Pin::value() const {
+    return gpio_get(gpio_);
 }
 
-void Pin::toggle() {
-    set(!_value);
+void Pin::value(bool v) {
+    gpio_put(gpio_, v);
+}
+
+void Pin::on() {
+    gpio_put(gpio_, true);
+}
+
+void Pin::off() {
+    gpio_put(gpio_, false);
 }

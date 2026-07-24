@@ -1,80 +1,46 @@
 #include "pwm.h"
+
+#include <pico/stdlib.h>
+#include "hardware/clocks.h"
 #include "hardware/pwm.h"
-#include "utils.h"
 
-void PWM::calculate_values() {
-    if (!inited)
-        return;
+Pwm::Pwm(uint gpio, uint32_t freq_hz) : gpio_(gpio), wrap_(0) {
+    gpio_set_function(gpio_, GPIO_FUNC_PWM);
+    slice_ = pwm_gpio_to_slice_num(gpio_);
+    channel_ = pwm_gpio_to_channel(gpio_);
 
-    // set the clock divider
-    pwm_set_clkdiv(slice_num, CLKDIV);
-
-    // wrap value
-    // the CPU starts counting, and this will be the last value where it is still going
-    // with the frequency, we set how many times a full cycle will be executed every second
-    uint wrap = (CLOCK_SPEED / CLKDIV / (float) frequency);
-
-    // level value
-    // this can range from 0 to wrap
-    // after the CPU reaches level, it switches from high to low
-    uint level = duty_cycle * wrap;
-
-    // configure the PWM slice for the desired frequency (wrap value)
-    pwm_set_wrap(slice_num, wrap);
-
-    // set the duty cycle (level value)
-    pwm_set_chan_level(slice_num, channel_num, level);
+    apply_freq(freq_hz);
+    pwm_set_chan_level(slice_, channel_, 0);
+    pwm_set_enabled(slice_, true);
 }
 
-PWM::PWM(uint _pin)
-    : pin(_pin),
-      frequency(0),
-      duty_cycle(0),
-      slice_num(pwm_gpio_to_slice_num(_pin)),
-      channel_num(pwm_gpio_to_channel(_pin)),
-      inited(false) {}
+void Pwm::apply_freq(uint32_t freq_hz) {
+    if (freq_hz == 0) {
+        freq_hz = 1;
+    }
 
-void PWM::init() {
-    if (inited)
-        return;
+    uint32_t sys_hz = clock_get_hz(clk_sys);
 
-    inited = true;
+    float clkdiv = 1.0f;
+    uint32_t wrap = sys_hz / freq_hz;
+    while (wrap > 65535 && clkdiv < 255.0f) {
+        clkdiv += 1.0f;
+        wrap = uint32_t(float(sys_hz) / (clkdiv * float(freq_hz)));
+    }
+    if (wrap > 0) {
+        wrap -= 1;
+    }
 
-    gpio_set_function(pin, GPIO_FUNC_PWM);
-    pwm_set_enabled(slice_num, true);
+    pwm_set_clkdiv(slice_, clkdiv);
+    pwm_set_wrap(slice_, wrap);
+    wrap_ = wrap;
 }
 
-void PWM::deinit() {
-    if (!inited)
-        return;
-
-    inited = false;
-
-    gpio_deinit(pin);
+void Pwm::freq(uint32_t freq_hz) {
+    apply_freq(freq_hz);
 }
 
-void PWM::freq(uint _frequency) {
-    if (!inited)
-        return;
-
-    frequency = _frequency;
-
-    // The frequency cannot be lower than this value, otherwise wrap would overflow
-    // And it also cannot be higher than this value, since that is the maximum
-    // number of integer steps
-    frequency = clamp(frequency, CLOCK_SPEED / CLKDIV / 0xffff, CLOCK_SPEED / CLKDIV);
-
-    calculate_values();
-}
-
-void PWM::duty(float _duty_cycle) {
-    if (!inited)
-        return;
-
-    duty_cycle = _duty_cycle;
-
-    // duty cycle should be between 0 and 1
-    duty_cycle = clamp(duty_cycle, 0.0f, 1.0f);
-
-    calculate_values();
+void Pwm::duty_u16(uint16_t duty) {
+    uint32_t level = (uint32_t(duty) * wrap_) / 0xffff;
+    pwm_set_chan_level(slice_, channel_, level);
 }

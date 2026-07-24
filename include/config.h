@@ -1,49 +1,42 @@
 #pragma once
 
-#include "pico/stdlib.h"
+#include <pico/types.h>
 
-const uint BUZZER_PIN = 2;
+namespace config {
 
-const uint BUTTON_PIN = 0;
-const uint BUTTON_DEBOUNCE_DELAY_US = 5e5;
+constexpr uint BUTTON_PIN = 0;
 
-const uint ULTRA_TRIG_PIN = 20;
-const uint ULTRA_ECHO_PIN = 19;
-const uint ULTRA_BUFFER_SIZE = 16;
-const uint ULTRA_BUFFER_TIME_WINDOW_US = 3e5;
+constexpr uint BUZZER_PIN = 17;
 
-const uint HB_L1_PIN = 13;
-const uint HB_L2_PIN = 12;
-const uint HB_R1_PIN = 11;
-const uint HB_R2_PIN = 10;
-const uint HB_EEP_PIN = 15;
-const uint HB_ULT_PIN = 14;
-const uint HB_PWM_FREQ = 2000;
+constexpr uint RGB_LED_R_PIN = 18;
+constexpr uint RGB_LED_G_PIN = 19;
+constexpr uint RGB_LED_B_PIN = 20;
 
-const uint SERVO_PIN = 16;
-const float SERVO_MIN = 0.032f;
-const float SERVO_MID = 0.075f;
-const float SERVO_MAX = 0.130f;
+constexpr uint HB_LA_PIN = 12;
+constexpr uint HB_LB_PIN = 13;
+constexpr uint HB_RA_PIN = 10;
+constexpr uint HB_RB_PIN = 11;
 
-const uint RGB_SENSOR_SDA_PIN = 26;
-const uint RGB_SENSOR_SCL_PIN = 27;
-const uint RGB_SENSOR_CHAN = 1;
-const uint RGB_SENSOR_LED_PIN = 17;
-const uint RGB_SENSOR_INTEGRATION_TIME = 40;
-const uint RGB_SENSOR_GAIN = 3;
+constexpr uint ENC_LA_PIN = 6;
+constexpr uint ENC_LB_PIN = 7;
+constexpr uint ENC_RA_PIN = 8;
+constexpr uint ENC_RB_PIN = 9;
 
-const uint PROXY_PIN = 3;
+constexpr float SC_PID_KP = 400.0;
+constexpr float SC_PID_KI = 3200.0;
+constexpr float SC_PID_KD = 0;
+constexpr float SC_PID_INT_MIN = -45000.0;
+constexpr float SC_PID_INT_MAX = 45000.0;
 
-const uint ENC_LA = 6;
-const uint ENC_LB = 7;
-const uint ENC_RA = 8;
-const uint ENC_RB = 9;
-const uint ENC_BUFFER_SIZE = 1024;
-const uint ENC_BUFFER_TIME_WINDOW_US = 1e5;
+constexpr uint TRACK_LEFT_PIN = 28;
+constexpr uint TRACK_RIGHT_PIN = 16;
 
-const uint WHEEL_DIAMETER_MM = 43;
+constexpr uint SERVO_PIN = 22;
+constexpr uint SERVO_MIN = 2100;
+constexpr uint SERVO_MID = 4800;
+constexpr uint SERVO_MAX = 8300;
 
-const uint RGB_LED_R_PIN = 21;
-const uint RGB_LED_G_PIN = 22;
-const uint RGB_LED_B_PIN = 18;
-const uint RGB_LED_PWM_FREQ = 2000;
+constexpr uint ULTRA_TRIG_PIN = 27;
+constexpr uint ULTRA_ECHO_PIN = 26;
+
+} // namespace config
