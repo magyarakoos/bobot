@@ -6,7 +6,7 @@ namespace config {
 
 constexpr uint BUTTON_PIN = 0;
 
-constexpr uint BUZZER_PIN = 17;
+constexpr uint BUZZER_PIN = 21;
 
 constexpr uint RGB_LED_R_PIN = 18;
 constexpr uint RGB_LED_G_PIN = 19;
