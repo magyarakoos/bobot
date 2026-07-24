@@ -69,6 +69,7 @@ target_link_libraries(
     hardware_pwm
     hardware_clocks
     hardware_pio
+    hardware_i2c
 )
 
 pico_set_program_name(${PROJECT_NAME} "bobot-drivers")

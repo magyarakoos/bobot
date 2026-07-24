@@ -28,6 +28,12 @@ constexpr float SC_PID_KD = 0;
 constexpr float SC_PID_INT_MIN = -45000.0;
 constexpr float SC_PID_INT_MAX = 45000.0;
 
+constexpr uint RGB_SENSOR_SDA_PIN = 16;
+constexpr uint RGB_SENSOR_SCL_PIN = 17;
+constexpr uint RGB_SENSOR_CHAN = 1;
+constexpr uint RGB_SENSOR_LED_PIN = 28;
+constexpr uint RGB_SENSOR_INTEGRATION_TIME = 40;
+constexpr uint RGB_SENSOR_GAIN = 3;
 constexpr uint TRACK_LEFT_PIN = 28;
 constexpr uint TRACK_RIGHT_PIN = 16;
 
