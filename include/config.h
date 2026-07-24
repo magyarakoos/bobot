@@ -34,8 +34,6 @@ constexpr uint RGB_SENSOR_CHAN = 1;
 constexpr uint RGB_SENSOR_LED_PIN = 28;
 constexpr uint RGB_SENSOR_INTEGRATION_TIME = 40;
 constexpr uint RGB_SENSOR_GAIN = 3;
-constexpr uint TRACK_LEFT_PIN = 28;
-constexpr uint TRACK_RIGHT_PIN = 16;
 
 constexpr uint SERVO_PIN = 22;
 constexpr uint SERVO_MIN = 2100;
