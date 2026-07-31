@@ -1,5 +1,5 @@
 #include <pico/stdlib.h>
-#include <cstdio>
+#include <string>
 #include "bobot.h"
 
 int main() {
@@ -7,10 +7,18 @@ int main() {
 
     Bobot bobot;
 
-    bobot.sc.drive(300, 300);
+    TcpError x = bobot.setup_tcp();
+
+    if (x != TcpError::OK) {
+        while (true) {
+            printf("TCP setup failed\n");
+            sleep_ms(1000);
+        }
+    }
 
     while (true) {
-        printf("%6.4f %6.4f %6.4f\n", bobot.sc.last_l_rpm, bobot.sc.last_r_rpm, bobot.ultra.dist());
-        sleep_ms(100);
+        bobot.tcp.send((std::to_string(bobot.ultra.dist()) + " cm").c_str());
+        printf("%f\n", bobot.ultra.dist());
+        sleep_ms(500);
     }
 }
