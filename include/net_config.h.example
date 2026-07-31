@@ -1,0 +1,12 @@
+#include <cstdint>
+
+namespace config {
+
+constexpr char WIFI_SSID[] = "YOUR_WIFI_SSID";
+constexpr char WIFI_PASSWORD[] = "YOUR_WIFI_PASSWORD";
+constexpr uint32_t WIFI_TIMEOUT_MS = 30000;
+
+constexpr char SERVER_IP[] = "YOUR_SERVER_IP";
+constexpr uint16_t SERVER_PORT = 8080;
+
+} // namespace config
