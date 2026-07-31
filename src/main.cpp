@@ -3,8 +3,6 @@
 #include "bobot.h"
 
 int main() {
-    stdio_init_all();
-
     Bobot bobot;
 
     TcpError x = bobot.setup_tcp();

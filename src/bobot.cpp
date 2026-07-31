@@ -1,4 +1,6 @@
 #include "bobot.h"
+#include <cyw43_country.h>
+#include <pico/cyw43_arch.h>
 
 #include "config.h"
 #include "net_config.h"
@@ -28,7 +30,14 @@ Bobot::Bobot()
          config::SC_PID_KD,
          config::SC_PID_INT_MIN,
          config::SC_PID_INT_MAX),
-      ultra(config::ULTRA_TRIG_PIN, config::ULTRA_ECHO_PIN) {}
+      ultra(config::ULTRA_TRIG_PIN, config::ULTRA_ECHO_PIN) {
+
+    stdio_init_all();
+
+    if (!cyw43_is_initialized(&cyw43_state)) {
+        cyw43_arch_init_with_country(CYW43_COUNTRY_HUNGARY);
+    }
+}
 
 void Bobot::tcp_packet_handler(const uint8_t* payload, uint32_t length) {
     printf("Received packet (%u bytes): %.*s\n", length, (int) length, payload);
