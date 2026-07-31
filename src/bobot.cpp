@@ -1,4 +1,6 @@
 #include "bobot.h"
+#include <cyw43_country.h>
+#include <pico/cyw43_arch.h>
 
 #include "config.h"
 #include "net_config.h"
@@ -8,10 +10,6 @@ Bobot::Bobot()
     : button(config::BUTTON_PIN, Pin::Direction::In, Pin::Pull::Up),
       buzzer(config::BUZZER_PIN),
       rgb_led(config::RGB_LED_R_PIN, config::RGB_LED_G_PIN, config::RGB_LED_B_PIN),
-      track_left(config::TRACK_LEFT_PIN, Pin::Direction::In),
-      track_right(config::TRACK_RIGHT_PIN, Pin::Direction::In),
-      ultra(config::ULTRA_TRIG_PIN, config::ULTRA_ECHO_PIN),
-      servo(config::SERVO_PIN, config::SERVO_MIN, config::SERVO_MID, config::SERVO_MAX),
       sc(config::HB_LA_PIN,
          config::HB_LB_PIN,
          config::HB_RA_PIN,
@@ -24,7 +22,18 @@ Bobot::Bobot()
          config::SC_PID_KI,
          config::SC_PID_KD,
          config::SC_PID_INT_MIN,
-         config::SC_PID_INT_MAX) {}
+         config::SC_PID_INT_MAX),
+      servo(config::SERVO_PIN, config::SERVO_MIN, config::SERVO_MID, config::SERVO_MAX),
+      track_left(config::TRACK_LEFT_PIN, Pin::Direction::In),
+      track_right(config::TRACK_RIGHT_PIN, Pin::Direction::In),
+      ultra(config::ULTRA_TRIG_PIN, config::ULTRA_ECHO_PIN) {
+
+    stdio_init_all();
+
+    if (!cyw43_is_initialized(&cyw43_state)) {
+        cyw43_arch_init_with_country(CYW43_COUNTRY_HUNGARY);
+    }
+}
 
 void Bobot::tcp_packet_handler(const uint8_t* payload, uint32_t length) {
     printf("Received packet (%u bytes): %.*s\n", length, (int) length, payload);

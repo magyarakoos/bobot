@@ -11,9 +11,11 @@ TcpClient::~TcpClient() {
 }
 
 TcpError TcpClient::init_wifi(const char* ssid, const char* password, uint32_t timeout_ms) {
-    if (cyw43_arch_init_with_country(CYW43_COUNTRY_HUNGARY)) {
-        printf("[TCP] Failed to initialize cyw43\n");
-        return TcpError::CYW43_FAILED;
+    if (!cyw43_is_initialized(&cyw43_state)) {
+        if (cyw43_arch_init_with_country(CYW43_COUNTRY_HUNGARY)) {
+            printf("[TCP] Failed to initialize cyw43\n");
+            return TcpError::CYW43_FAILED;
+        }
     }
 
     cyw43_arch_enable_sta_mode();
