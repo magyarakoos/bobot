@@ -1,6 +1,8 @@
 #include "bobot.h"
 
 #include "config.h"
+#include "net_config.h"
+#include "tcp.h"
 
 Bobot::Bobot()
     : button(config::BUTTON_PIN, Pin::Direction::In, Pin::Pull::Up),
@@ -23,3 +25,18 @@ Bobot::Bobot()
          config::SC_PID_KD,
          config::SC_PID_INT_MIN,
          config::SC_PID_INT_MAX) {}
+
+void Bobot::tcp_packet_handler(const uint8_t* payload, uint32_t length) {
+    printf("Received packet (%u bytes): %.*s\n", length, (int) length, payload);
+}
+
+TcpError Bobot::setup_tcp() {
+    auto err = tcp.init_wifi(config::WIFI_SSID, config::WIFI_PASSWORD, config::WIFI_TIMEOUT_MS);
+    if (err != TcpError::OK) {
+        return err;
+    }
+
+    tcp.set_packet_callback([this](const uint8_t* payload, uint32_t length) { tcp_packet_handler(payload, length); });
+
+    return tcp.connect(config::SERVER_IP, config::SERVER_PORT);
+}
