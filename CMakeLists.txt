@@ -33,19 +33,23 @@ pico_sdk_init()
 
 # add cpp files
 add_executable(${PROJECT_NAME}
+    src/bobot.cpp
+    src/buzzer.cpp
+    src/encoder.cpp
+    src/gpio_irq.cpp
+    src/h_bridge.cpp
+    src/i2c.cpp
     src/main.cpp
+    src/onboard_led.cpp
     src/pin.cpp
     src/pwm.cpp
-    src/buzzer.cpp
     src/rgb_led.cpp
-    src/ultra_sensor.cpp
-    src/bobot.cpp
-    src/gpio_irq.cpp
+    src/rgb_sensor.cpp
     src/servo.cpp
-    src/encoder.cpp
-    src/h_bridge.cpp
     src/speed_control.cpp
+    src/ultra_sensor.cpp
     src/utils.cpp
+    src/tcp.cpp
 )
 
 # needed for serial USB communication
@@ -65,6 +69,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE include)
 target_link_libraries(
     ${PROJECT_NAME}
     pico_stdlib
+    pico_cyw43_arch_lwip_threadsafe_background
+    pico_lwip
     hardware_gpio
     hardware_pwm
     hardware_clocks
