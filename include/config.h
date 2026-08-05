@@ -6,7 +6,7 @@ namespace config {
 
 constexpr uint BUTTON_PIN = 0;
 
-constexpr uint BUZZER_PIN = 22;
+constexpr uint BUZZER_PIN = 14;
 
 constexpr uint RGB_LED_R_PIN = 18;
 constexpr uint RGB_LED_G_PIN = 19;
@@ -35,7 +35,7 @@ constexpr uint RGB_SENSOR_LED_PIN = 28;
 constexpr uint RGB_SENSOR_INTEGRATION_TIME = 40;
 constexpr uint RGB_SENSOR_GAIN = 3;
 
-constexpr uint SERVO_PIN = 21;
+constexpr uint SERVO_PIN = 22;
 constexpr uint SERVO_MIN = 2100;
 constexpr uint SERVO_MID = 4800;
 constexpr uint SERVO_MAX = 8300;
