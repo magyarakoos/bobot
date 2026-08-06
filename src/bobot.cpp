@@ -30,7 +30,8 @@ Bobot::Bobot()
          config::SC_PID_KD,
          config::SC_PID_INT_MIN,
          config::SC_PID_INT_MAX),
-      ultra(config::ULTRA_TRIG_PIN, config::ULTRA_ECHO_PIN) {
+      ultra(config::ULTRA_TRIG_PIN, config::ULTRA_ECHO_PIN),
+      proxy(config::TRACK_SENSOR_PIN, Pin::Direction::In) {
 
     stdio_init_all();
 

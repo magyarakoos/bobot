@@ -25,6 +25,7 @@ public:
     SpeedControl sc;
     TcpClient tcp;
     UltraSensor ultra;
+    Pin proxy;
 
     TcpError setup_tcp();
 };
