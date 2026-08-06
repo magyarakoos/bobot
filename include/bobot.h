@@ -20,7 +20,7 @@ public:
     Buzzer buzzer;
     OnboardLed led;
     RGBLed rgb_led;
-    //RgbSensor rgb_sensor;
+    RgbSensor rgb_sensor;
     Servo servo;
     SpeedControl sc;
     TcpClient tcp;

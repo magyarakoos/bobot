@@ -1,22 +1,14 @@
 #include <pico/stdlib.h>
 #include <string>
+#include "config.h"
 #include "bobot.h"
 
 int main() {
     Bobot bobot;
-
-    TcpError x = bobot.setup_tcp();
-
-    if (x != TcpError::OK) {
-        while (true) {
-            printf("TCP setup failed\n");
-            sleep_ms(1000);
-        }
-    }
-
+    bobot.rgb_sensor.led.on();
     while (true) {
-        bobot.tcp.send((std::to_string(bobot.ultra.dist()) + " cm").c_str());
-        printf("%f\n", bobot.ultra.dist());
-        sleep_ms(500);
+        auto [c, r, g, b] = bobot.rgb_sensor.measure();
+        printf("%d %d %d %d\n", c, r, g, b);
+        sleep_ms(config::RGB_SENSOR_INTEGRATION_TIME_MS);
     }
 }

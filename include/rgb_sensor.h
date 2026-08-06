@@ -1,7 +1,7 @@
 #pragma once
 
 #include <array>
-#include "i2c.h"
+#include "hardware/i2c.h"
 #include "pin.h"
 
 struct Color {
@@ -15,25 +15,27 @@ class RgbSensor {
 
     static constexpr uint8_t DEFAULT_ADDRESS = 0x29;
     static constexpr uint8_t CMD_BIT = 0x80;
+    static constexpr uint8_t AUTO_INCREMENT = 0x20;
 
     static constexpr uint8_t REG_ENABLE = 0x00;
+    static constexpr uint8_t REG_STATUS = 0x13;
     static constexpr uint8_t REG_CDATAL = 0x14;
     static constexpr uint8_t REG_CONTROL = 0x0F;
     static constexpr uint8_t REG_ATIME = 0x01;
 
     static constexpr uint8_t PON = 0x01;
     static constexpr uint8_t AEN = 0x02;
+    static constexpr uint8_t AVALID = 0x01;
 
     uint8_t address;
-    I2C i2c;
+    i2c_inst_t* i2c;
 
     uint integration_time;
     uint gain;
 
     void write8(uint8_t reg, uint8_t value);
-
     uint8_t read8(uint8_t reg);
-
+    void read_block(uint8_t reg, uint8_t* buf, uint nbytes);
     void write_bits(uint8_t reg, uint8_t value, uint8_t mask);
 
     std::array<uint16_t, 4> get_data();
@@ -41,7 +43,7 @@ class RgbSensor {
 public:
     RgbSensor(uint sda_pin,
               uint scl_pin,
-              uint i2c_address,
+              uint i2c_index,
               uint led_pin,
               uint integration_time,
               uint gain,
@@ -52,6 +54,5 @@ public:
     Color measure();
 
     void set_integration_time(uint _integration_time);
-
     void set_gain(uint _gain);
 };

@@ -38,7 +38,6 @@ add_executable(${PROJECT_NAME}
     src/encoder.cpp
     src/gpio_irq.cpp
     src/h_bridge.cpp
-    src/i2c.cpp
     src/main.cpp
     src/onboard_led.cpp
     src/pin.cpp
