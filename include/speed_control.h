@@ -28,9 +28,14 @@ public:
 
     volatile float last_l_rpm;
     volatile float last_r_rpm;
+    volatile int last_l_effort;
+    volatile int last_r_effort;
+
+    Pid l_pid_;
+    Pid r_pid_;
 
 private:
-    static constexpr int CONTROL_FREQ = 50;
+    static constexpr int CONTROL_FREQ = 200;
     static constexpr int TICKS_PER_REV = 1440;
 
     static bool control_loop_callback(repeating_timer_t* rt);
@@ -39,8 +44,6 @@ private:
     HBridge hb;
     Encoder l_enc_;
     Encoder r_enc_;
-    Pid l_pid_;
-    Pid r_pid_;
 
     volatile float l_rpm_sp_;
     volatile float r_rpm_sp_;

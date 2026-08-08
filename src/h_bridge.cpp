@@ -1,3 +1,5 @@
+#include <math.h>
+
 #include "h_bridge.h"
 #include "utils.h"
 
@@ -9,6 +11,14 @@ HBridge::HBridge(uint la_pin, uint lb_pin, uint ra_pin, uint rb_pin, uint freq)
 void HBridge::drive(int l, int r) {
     l = clamp(l, -0xffff, 0xffff);
     r = clamp(r, -0xffff, 0xffff);
+
+    if (abs(l) < 20) {
+        l = 0;
+    }
+
+    if (abs(r) < 20) {
+        r = 0;
+    }
 
     if (l > 0) {
         la_pwm.duty_u16(0xffff);

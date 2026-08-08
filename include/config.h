@@ -22,11 +22,11 @@ constexpr uint ENC_LB_PIN = 7;
 constexpr uint ENC_RA_PIN = 8;
 constexpr uint ENC_RB_PIN = 9;
 
-constexpr float SC_PID_KP = 400.0;
-constexpr float SC_PID_KI = 3200.0;
+constexpr float SC_PID_KP = 8000;
+constexpr float SC_PID_KI = 0000;
 constexpr float SC_PID_KD = 0;
-constexpr float SC_PID_INT_MIN = -45000.0;
-constexpr float SC_PID_INT_MAX = 45000.0;
+constexpr float SC_PID_INT_MIN = -45000;
+constexpr float SC_PID_INT_MAX = 45000;
 
 constexpr uint TRACK_LEFT_PIN = 28;
 constexpr uint TRACK_RIGHT_PIN = 16;

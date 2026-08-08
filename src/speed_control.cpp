@@ -50,8 +50,11 @@ void SpeedControl::control_loop() {
     last_l_rpm = static_cast<float>(delta_l_ticks) * CONTROL_FREQ * 60.0f / TICKS_PER_REV;
     last_r_rpm = static_cast<float>(delta_r_ticks) * CONTROL_FREQ * 60.0f / TICKS_PER_REV;
 
-    int32_t l_effort = l_pid_.step(last_l_rpm, dt) + l_rpm_sp_;
-    int32_t r_effort = r_pid_.step(last_r_rpm, dt) + r_rpm_sp_;
+    int32_t l_effort = l_pid_.step(last_l_rpm, dt);
+    int32_t r_effort = r_pid_.step(last_r_rpm, dt);
+
+    last_l_effort = l_effort;
+    last_r_effort = r_effort;
 
     hb.drive(l_effort, r_effort);
 }
@@ -59,4 +62,6 @@ void SpeedControl::control_loop() {
 void SpeedControl::drive(float l_rpm, float r_rpm) {
     l_rpm_sp_ = l_rpm;
     r_rpm_sp_ = r_rpm;
+
+    //hb.drive(l_rpm, r_rpm);
 }

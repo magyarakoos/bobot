@@ -1,3 +1,5 @@
+#pragma once
+
 #include <cstdint>
 
 template <typename T>
@@ -25,6 +27,10 @@ public:
     Pid(float _kp, float _ki, float _kd, float _int_min, float _int_max, float _sp);
 
     float step(float pv, float dt);
+
+    volatile float last_p;
+    volatile float last_i;
+    volatile float last_d;
 
 private:
     float _int;

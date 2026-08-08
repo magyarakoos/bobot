@@ -6,11 +6,15 @@ Pid::Pid(float _kp, float _ki, float _kd, float _int_min, float _int_max, float 
 float Pid::step(float pv, float dt) {
     float e = sp - pv;
 
-    _int = clamp(_int + e * dt, int_min, int_max);
+    _int = clamp(_int + ki * e * dt, int_min, int_max);
 
     float p = kp * e;
-    float i = ki * _int;
+    float i = _int;
     float d = kd * (e - _last_e) / dt;
+
+    last_p = p;
+    last_i = i;
+    last_d = d;
 
     _last_e = e;
     return p + i + d;
